@@ -1,1749 +1,893 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>ERG Hub | Optro</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to Optro: Pre-Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --cb:#0a2c43;--cit:#e5fe52;--lg:#ebebe7;--teal:#0e5371;
-  --pur:#bfa3eb;--ice:#c9ecee;--red:#c0392b;--green:#1a7a4a;
-  --fd:'DM Serif Display',Georgia,serif;--fs:'Syne',sans-serif;--fm:'DM Mono',monospace;
-  --r:12px;--tr:220ms cubic-bezier(.4,0,.2,1)
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:var(--fs);background:var(--lg);color:var(--cb);line-height:1.6}
-a{color:inherit;text-decoration:none}
-button,input,select,textarea{font-family:inherit;font-size:inherit}
+  :root {
+    --blue:        #0a2c43;
+    --blue-dark:   #071e2e;
+    --teal:        #0e5371;
+    --teal-light:  #d0eaf0;
+    --citron:      #e5fe52;
+    --citron-soft: #f5ffa8;
+    --purple:      #bfa3eb;
+    --purple-light:#ede6ff;
+    --ice:         #c9ecee;
+    --gray:        #ebebe7;
+    --gray-mid:    #d0d0cb;
+    --gray-dark:   #8a8a84;
+    --text:        #0a2c43;
+    --muted:       #3a5a6e;
+    --white:       #ffffff;
+    --shadow:      0 1px 4px rgba(10,44,67,0.07), 0 4px 20px rgba(10,44,67,0.05);
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--text); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
 
-/* UTILS */
-.container{max-width:1160px;margin:0 auto;padding:0 28px}
-.tag{display:inline-block;font-family:var(--fm);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;font-weight:500}
-.tag--active{background:var(--cit);color:var(--cb)}.tag--forming{background:var(--pur);color:var(--cb)}.tag--pilot{background:var(--ice);color:var(--teal)}
-.tag--created{background:#e5e7eb;color:#374151}.tag--reviewing{background:#fef3c7;color:#92400e}.tag--approved{background:#d1fae5;color:#065f46}.tag--final{background:var(--cit);color:var(--cb)}
-.tag--pending{background:#e5e7eb;color:#374151}.tag--denied{background:#fee2e2;color:#991b1b}
-.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:8px;font-weight:700;font-size:.83rem;letter-spacing:.03em;cursor:pointer;border:2px solid transparent;transition:all var(--tr);white-space:nowrap}
-.btn--primary{background:var(--cit);color:var(--cb);border-color:var(--cit)}.btn--primary:hover{background:transparent;color:var(--cit)}
-.btn--ghost{background:transparent;color:#e8e8e4;border-color:rgba(235,235,231,.3)}.btn--ghost:hover{border-color:var(--cit);color:var(--cit)}
-.btn--secondary{background:var(--lg);color:var(--cb);border-color:#ccc}.btn--secondary:hover{background:#ddd}
-.btn--danger{background:var(--red);color:#fff;border-color:var(--red)}.btn--danger:hover{background:#a93226}
-.btn--teal{background:var(--teal);color:#fff;border-color:var(--teal)}.btn--teal:hover{background:#0a3f56}
-.btn--sm{padding:5px 12px;font-size:.73rem}
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+  .d1 { transition-delay: 0.1s; }
+  .d2 { transition-delay: 0.2s; }
+  .d3 { transition-delay: 0.3s; }
+  .d4 { transition-delay: 0.4s; }
 
-/* ADMIN EDIT OVERLAY */
-.adm-edit-ring{outline:2px dashed rgba(229,254,82,.5);outline-offset:3px;cursor:pointer;transition:outline var(--tr)}
-.admin-active .adm-editable:hover{outline:2px dashed var(--cit);outline-offset:3px;cursor:pointer}
-.adm-pen{display:none;position:absolute;top:-8px;right:-8px;background:var(--cit);color:var(--cb);border:none;border-radius:50%;width:24px;height:24px;font-size:.72rem;cursor:pointer;align-items:center;justify-content:center;font-weight:900;z-index:10;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:transform var(--tr)}
-.adm-pen:hover{transform:scale(1.15)}
-.admin-active .adm-wrap:hover .adm-pen{display:flex}
-.adm-wrap{position:relative;display:block}
-.adm-wrap-inline{position:relative;display:inline-block}
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 200;
+    background: var(--blue);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 52px; height: 64px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-logo { font-size: 22px; font-weight: 500; color: var(--white); letter-spacing: 0.05em; text-decoration: none; }
+  .nav-logo span { color: var(--citron); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; letter-spacing: 0.03em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--citron); }
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
 
-/* NAV */
-.nav{position:sticky;top:0;z-index:200;background:var(--cb);border-bottom:2px solid var(--teal)}
-.nav__inner{display:flex;align-items:center;justify-content:space-between;gap:12px;height:54px}
-.nav__logo{font-family:var(--fm);font-weight:500;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cit);flex-shrink:0}
-.nav__links{display:flex;gap:4px;list-style:none;align-items:center;flex-wrap:wrap}
-.nav__links a{color:var(--lg);font-size:.73rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:5px 9px;border-radius:6px;transition:background var(--tr),color var(--tr)}
-.nav__links a:hover{background:var(--teal);color:var(--cit)}
-.admin-badge{display:none;background:var(--cit);color:var(--cb);font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:999px;font-weight:700}
-.admin-badge.on{display:inline-block}
-#navAdminBtn{background:rgba(255,255,255,.08);color:var(--lg);border:1.5px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 12px;font-size:.69rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:all var(--tr);font-family:var(--fs)}
-#navAdminBtn:hover{border-color:var(--cit);color:var(--cit)}
-#navAdminBtn.on{background:rgba(229,254,82,.12);border-color:var(--cit);color:var(--cit)}
-#navDashBtn{display:none;background:var(--cit);color:var(--cb);border:none;border-radius:6px;padding:5px 12px;font-size:.69rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:var(--fs);transition:background var(--tr)}
-#navDashBtn:hover{background:#c8e040}
-#navDashBtn.on{display:inline-block}
+  /* ── HERO ── */
+  .hero {
+    background: var(--blue); color: var(--white);
+    padding: 100px 52px 92px;
+    display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center;
+    position: relative; overflow: hidden; min-height: 540px;
+  }
+  .hero::before {
+    content: ''; position: absolute; right: -100px; top: -100px;
+    width: 520px; height: 520px; border-radius: 50%;
+    border: 72px solid rgba(229,254,82,0.08); pointer-events: none;
+  }
+  .hero::after {
+    content: ''; position: absolute; right: 80px; bottom: -140px;
+    width: 300px; height: 300px; border-radius: 50%;
+    border: 48px solid rgba(14,83,113,0.28); pointer-events: none;
+  }
+  .eyebrow-pill {
+    display: inline-block;
+    background: rgba(229,254,82,0.12); border: 1px solid rgba(229,254,82,0.24);
+    color: var(--citron); font-size: 10px; font-weight: 500;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 100px; margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif; font-size: 64px; font-weight: 400;
+    line-height: 1.0; margin-bottom: 24px; letter-spacing: -0.01em;
+  }
+  .hero h1 em { font-style: italic; color: var(--citron); }
+  .hero-sub { font-size: 17px; color: rgba(255,255,255,0.65); max-width: 430px; margin-bottom: 40px; line-height: 1.75; }
+  .btn-primary {
+    display: inline-block; background: var(--citron); color: var(--blue-dark);
+    font-size: 14px; font-weight: 500; padding: 15px 32px; border-radius: 8px;
+    text-decoration: none; letter-spacing: 0.02em;
+    transition: filter 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
 
-/* ADMIN BANNER */
-.admin-banner{display:none;background:linear-gradient(90deg,var(--cit),#c8e040);color:var(--cb);text-align:center;padding:8px 20px;font-family:var(--fm);font-size:.69rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
-.admin-banner.on{display:block}
+  /* hero card */
+  .hero-card {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.11);
+    border-radius: 16px; padding: 36px; position: relative; z-index: 1; backdrop-filter: blur(6px);
+  }
+  .hc-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.38); margin-bottom: 16px; }
+  .path-cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .path-on {
+    background: rgba(229,254,82,0.1); border: 1px solid rgba(229,254,82,0.28);
+    border-radius: 8px; padding: 14px 18px;
+  }
+  .path-off {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 8px; padding: 14px 18px;
+  }
+  .path-lbl { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
+  .path-on .path-lbl { color: var(--citron); }
+  .path-off .path-lbl { color: rgba(255,255,255,0.32); }
+  .path-on p { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; }
+  .path-off p { font-size: 13px; color: rgba(255,255,255,0.48); line-height: 1.5; }
+  .chk-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.32); margin-bottom: 12px; }
+  .chklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .chklist li { display: flex; align-items: center; gap: 11px; font-size: 13px; color: rgba(255,255,255,0.76); }
+  .dot-done, .dot-open { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .dot-done { background: var(--citron); }
+  .dot-done svg { width: 10px; height: 10px; }
+  .dot-open { background: rgba(229,254,82,0.1); border: 1.5px solid rgba(229,254,82,0.38); }
 
-/* HERO */
-.hero{background:var(--cb);color:var(--lg);padding:76px 0 66px;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(14,83,113,.45),transparent 70%),radial-gradient(ellipse 40% 60% at 10% 80%,rgba(201,236,238,.08),transparent 60%);pointer-events:none}
-.hero__eyebrow{font-family:var(--fm);font-size:.69rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cit);margin-bottom:16px}
-.hero__heading{font-family:var(--fd);font-size:clamp(2.2rem,5vw,3.8rem);line-height:1.08;max-width:680px;margin-bottom:20px}
-.hero__heading em{font-style:italic;color:var(--cit)}
-.hero__body{max-width:500px;font-size:.95rem;color:var(--ice);line-height:1.7;margin-bottom:34px}
-.hero__ctas{display:flex;gap:10px;flex-wrap:wrap}
+  /* ── SECTION SHARED ── */
+  section { padding: 92px 52px; }
+  .eyebrow { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--teal); margin-bottom: 14px; }
+  .sec-title { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 400; line-height: 1.08; margin-bottom: 18px; letter-spacing: -0.01em; }
+  .sec-sub { font-size: 16px; color: var(--muted); max-width: 520px; margin-bottom: 52px; line-height: 1.75; }
+  .dark-sec .eyebrow { color: var(--citron); }
+  .dark-sec .sec-title { color: var(--white); }
+  .dark-sec .sec-sub { color: rgba(255,255,255,0.52); }
 
-/* STATS */
-.stats{background:var(--teal);color:var(--lg);padding:20px 0}
-.stats__inner{display:flex;justify-content:space-around;flex-wrap:wrap}
-.stat{text-align:center;padding:8px 18px;border-right:1px solid rgba(255,255,255,.15)}
-.stat:last-child{border-right:none}
-.stat__number{font-family:var(--fd);font-size:2rem;color:var(--cit);line-height:1}
-.stat__label{font-size:.71rem;font-family:var(--fm);letter-spacing:.09em;text-transform:uppercase;opacity:.8;margin-top:3px}
+  /* ── WELCOME ── */
+  .welcome-sec { background: var(--gray); display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .welcome-quote {
+    font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; font-style: italic;
+    line-height: 1.45; color: var(--blue); padding-left: 22px; border-left: 3px solid var(--citron); margin-bottom: 28px;
+  }
+  .welcome-body p { font-size: 15px; color: var(--muted); margin-bottom: 16px; line-height: 1.75; }
+  .sig { margin-top: 28px; }
+  .sig-name { font-size: 15px; font-weight: 500; margin-bottom: 2px; }
+  .sig-role { font-size: 13px; color: var(--gray-dark); }
+  .info-stack { display: flex; flex-direction: column; gap: 14px; }
+  .info-card {
+    background: var(--white); border: 1px solid var(--gray-mid); border-radius: 12px;
+    padding: 20px 22px; display: flex; gap: 16px; align-items: flex-start;
+    box-shadow: var(--shadow); transition: border-color 0.2s, transform 0.2s;
+  }
+  .info-card:hover { border-color: var(--ice); transform: translateY(-1px); }
+  .ic-icon { width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ic-icon svg { width: 18px; height: 18px; }
+  .info-card h4 { font-size: 14px; font-weight: 500; margin-bottom: 5px; }
+  .info-card p { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
-/* SECTIONS */
-.section{padding:72px 0}
-.section--alt{background:#e2e2de}
-.section--dark{background:var(--cb);color:var(--lg)}
-.section__label{font-family:var(--fm);font-size:.67rem;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
-.section--dark .section__label{color:var(--ice)}
-.section__heading{font-family:var(--fd);font-size:clamp(1.7rem,3vw,2.4rem);line-height:1.15;margin-bottom:14px}
-.section__intro{max-width:600px;font-size:.93rem;line-height:1.75;color:#3a5468;margin-bottom:44px}
-.section--dark .section__intro{color:var(--ice)}
+  /* ── DAY ONE / NHO ── */
+  .nho-sec { background: var(--white); }
+  .nho-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .n-card { border: 1px solid var(--gray-mid); border-radius: 12px; padding: 28px; background: var(--white); transition: border-color 0.2s; }
+  .n-card:hover { border-color: var(--ice); }
+  .n-card.full { grid-column: span 2; background: var(--blue); border-color: var(--blue); }
+  .n-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+  .n-icon svg { width: 20px; height: 20px; }
+  .n-card h3 { font-size: 16px; font-weight: 500; margin-bottom: 14px; color: var(--text); }
+  .n-card.full h3 { color: var(--white); }
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .blist li { font-size: 13px; color: var(--muted); padding-left: 16px; position: relative; line-height: 1.55; }
+  .blist li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--citron); }
+  .n-card.full .blist li { color: rgba(255,255,255,0.68); }
 
-/* PLATFORM FEATURES */
-.pf{background:var(--cb);padding:80px 0;color:var(--lg)}
-.pf__headline{font-family:var(--fd);font-size:clamp(1.8rem,3.5vw,2.8rem);line-height:1.12;max-width:760px;margin-bottom:10px}
-.pf__headline em{font-style:italic;color:var(--cit)}
-.pf__sub{font-size:.97rem;color:var(--ice);max-width:560px;margin-bottom:56px;line-height:1.7}
-.pf__personas{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.1);border-radius:var(--r);overflow:hidden;margin-bottom:56px}
-.pf__persona{background:#0d3550;padding:28px 24px;transition:background var(--tr)}
-.pf__persona:hover{background:#112e47}
-.pf__persona-eyebrow{font-family:var(--fm);font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cit);margin-bottom:8px}
-.pf__persona-title{font-family:var(--fd);font-size:1.35rem;margin-bottom:6px;color:var(--lg)}
-.pf__persona-sub{font-size:.79rem;color:var(--pur);font-style:italic;margin-bottom:14px}
-.pf__persona-list{list-style:none;padding:0}
-.pf__persona-list li{font-size:.8rem;color:var(--ice);padding:4px 0 4px 14px;position:relative}
-.pf__persona-list li::before{content:'';position:absolute;left:0;top:10px;width:5px;height:5px;border-radius:50%;background:var(--cit)}
-.pf__features{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-bottom:48px}
-.pf__feature{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:28px 24px;transition:background var(--tr)}
-.pf__feature:hover{background:rgba(255,255,255,.09)}
-.pf__feature-icon{font-size:2rem;margin-bottom:14px}
-.pf__feature-title{font-family:var(--fd);font-size:1.2rem;color:var(--lg);margin-bottom:8px}
-.pf__feature-body{font-size:.81rem;color:var(--ice);line-height:1.65;margin-bottom:14px}
-.pf__feature-bullets{list-style:none;padding:0}
-.pf__feature-bullets li{font-size:.78rem;color:var(--ice);padding:3px 0 3px 13px;position:relative;opacity:.85}
-.pf__feature-bullets li::before{content:'';position:absolute;left:0;top:9px;width:4px;height:4px;border-radius:50%;background:var(--cit)}
-.pf__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.pf__grid-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:20px 18px}
-.pf__grid-item-icon{font-size:1.5rem;margin-bottom:10px}
-.pf__grid-item-title{font-weight:700;font-size:.88rem;color:var(--lg);margin-bottom:6px}
-.pf__grid-item-body{font-size:.78rem;color:var(--ice);line-height:1.6;opacity:.85}
+  /* NHO schedule */
+  .sched-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; margin-top: 8px; }
+  .sched-col-lbl { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
+  .sched-col-lbl.bright { color: var(--citron); }
+  .sched-col-lbl.dim { color: rgba(255,255,255,0.28); }
+  .srow { display: flex; gap: 10px; align-items: baseline; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .srow:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .stime { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; color: var(--citron); min-width: 52px; flex-shrink: 0; }
+  .stime.dim { color: rgba(255,255,255,0.28); }
+  .sev { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.4; }
+  .sev.dim { color: rgba(255,255,255,0.38); }
+  .sev.it { color: rgba(255,255,255,0.48); font-style: italic; }
+  .sched-foot { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 20px; }
 
-/* PILLARS */
-.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-.pillar{background:#fff;border-radius:var(--r);padding:24px 20px;border-top:4px solid var(--teal);position:relative}
-.pillar__icon{font-size:1.5rem;margin-bottom:11px}
-.pillar__title{font-weight:700;font-size:.88rem;letter-spacing:.03em;margin-bottom:6px}
-.pillar__body{font-size:.81rem;line-height:1.65;color:#4a6070}
+  /* ── WEEK ONE TIMELINE ── */
+  .week-sec { background: var(--gray); }
+  .timeline { display: flex; flex-direction: column; }
+  .tl-item { display: grid; grid-template-columns: 96px 34px 1fr; align-items: start; }
+  .tl-lbl { text-align: right; padding-right: 16px; padding-top: 9px; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-dark); }
+  .tl-spine { display: flex; flex-direction: column; align-items: center; }
+  .tl-dot { width: 14px; height: 14px; border-radius: 50%; margin-top: 9px; flex-shrink: 0; border: 2.5px solid var(--gray); outline: 2px solid var(--teal); background: var(--teal); }
+  .tl-dot.hi { background: var(--citron); outline-color: var(--citron); }
+  .tl-line { flex: 1; width: 2px; background: var(--gray-mid); min-height: 16px; }
+  .tl-body { padding: 0 0 36px 18px; }
+  .tl-body h4 { font-size: 15px; font-weight: 500; margin-bottom: 7px; padding-top: 5px; }
+  .tl-body p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .tag { font-size: 11px; font-weight: 500; padding: 4px 11px; border-radius: 100px; }
+  .tag.ice { background: var(--ice); color: var(--teal); }
+  .tag.yel { background: var(--citron-soft); color: var(--blue); }
+  .tag.pur { background: var(--purple-light); color: #6040a0; }
 
-/* SEARCH */
-.search-bar{position:relative;max-width:420px;margin-bottom:32px}
-.search-bar input{width:100%;padding:12px 18px 12px 44px;border:2px solid #d0d0cc;border-radius:10px;background:#fff;font-size:.88rem;color:var(--cb);outline:none;transition:border-color var(--tr)}
-.search-bar input:focus{border-color:var(--teal)}
-.search-bar__icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#8fa3b0;pointer-events:none}
+  /* ── CULTURE ── */
+  .culture-sec { background: var(--blue-dark); color: var(--white); }
+  .val-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+  .v-card {
+    background: rgba(255,255,255,0.055); border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 12px; padding: 28px; transition: background 0.2s, border-color 0.2s;
+  }
+  .v-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(229,254,82,0.18); }
+  .v-num { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 600; color: var(--citron); opacity: 0.28; line-height: 1; margin-bottom: 14px; }
+  .v-card h3 { font-size: 16px; font-weight: 500; color: var(--white); margin-bottom: 10px; }
+  .v-card p { font-size: 13px; color: rgba(255,255,255,0.56); line-height: 1.7; }
+  .v-card.comm { background: rgba(229,254,82,0.07); border-color: rgba(229,254,82,0.18); }
+  .v-card.comm h3 { color: var(--citron); }
+  .v-card.comm p { color: rgba(255,255,255,0.58); }
+  .erg-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .erg { font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 100px; background: rgba(229,254,82,0.1); color: var(--citron); border: 1px solid rgba(229,254,82,0.22); }
+  .dist-banner {
+    margin-top: 28px; background: rgba(14,83,113,0.32); border: 1px solid rgba(14,83,113,0.55);
+    border-radius: 12px; padding: 24px 28px; display: flex; gap: 18px; align-items: flex-start;
+  }
+  .dist-icon { background: rgba(14,83,113,0.5); border-radius: 8px; padding: 10px; flex-shrink: 0; }
+  .dist-icon svg { width: 20px; height: 20px; display: block; }
+  .dist-banner h4 { font-size: 15px; font-weight: 500; color: var(--ice); margin-bottom: 6px; }
+  .dist-banner p { font-size: 13px; color: rgba(255,255,255,0.58); line-height: 1.65; }
 
-/* ERG GRID */
-.erg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-.erg-card{background:#fff;border-radius:var(--r);border:1px solid #deded9;transition:transform var(--tr),box-shadow var(--tr);display:flex;flex-direction:column;position:relative;cursor:pointer}
-.erg-card:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(10,44,67,.11)}
-.erg-card__accent{height:6px;border-radius:var(--r) var(--r) 0 0}
-.erg-card__body{padding:20px 20px 16px;flex:1;display:flex;flex-direction:column}
-.erg-card__top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:11px}
-.erg-card__name{font-family:var(--fd);font-size:1.18rem;line-height:1.2;margin-bottom:3px}
-.erg-card__subtitle{font-family:var(--fm);font-size:.64rem;letter-spacing:.07em;text-transform:uppercase;color:#7a8f9c}
-.erg-card__mission{font-size:.83rem;line-height:1.65;color:#3d5568;margin-bottom:14px;flex:1}
-.erg-card__meta{border-top:1px solid #eeeee9;padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.erg-meta__label{font-family:var(--fm);font-size:.59rem;letter-spacing:.1em;text-transform:uppercase;color:#8fa3b0;margin-bottom:3px}
-.erg-meta__value{font-size:.79rem;font-weight:600;color:var(--cb)}
-.erg-card__footer{padding:11px 20px;background:var(--lg);display:flex;align-items:center;justify-content:space-between;gap:8px;border-radius:0 0 var(--r) var(--r)}
-.mc-pill{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.63rem;letter-spacing:.05em;color:#7a8f9c;text-transform:uppercase}
-.mc-pill span{background:#f0f0ec;color:var(--teal);font-weight:700;padding:2px 7px;border-radius:999px;font-size:.68rem}
-.join-btn{background:var(--cb);color:var(--cit);border:none;border-radius:6px;padding:6px 14px;font-size:.73rem;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:background var(--tr);font-family:var(--fs)}
-.join-btn:hover{background:var(--teal)}
-.join-btn--disabled{background:#c0c0bb;color:#fff;cursor:default}
-.join-btn--disabled:hover{background:#c0c0bb}
-.no-results{text-align:center;padding:52px 20px;color:#7a8f9c;font-size:.92rem;display:none}
+  /* ── BENEFITS ── */
+  .ben-sec { background: var(--white); }
+  .ben-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; }
+  .b-card {
+    background: var(--gray); border-radius: 12px; padding: 24px;
+    border: 1.5px solid transparent; transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .b-card:hover { border-color: var(--citron); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(10,44,67,0.1); }
+  .b-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .b-icon svg { width: 22px; height: 22px; }
+  .b-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 8px; }
+  .b-card p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+  .b-note { display: inline-block; margin-top: 14px; font-size: 11px; font-weight: 500; color: var(--teal); letter-spacing: 0.04em; text-decoration: none; transition: color 0.2s; } .b-note:hover { color: var(--blue); }
 
-/* ADMIN CARD CONTROLS */
-.erg-card__edit-bar{display:none;position:absolute;top:-12px;right:-8px;z-index:10;gap:5px}
-.edit-mode .erg-card__edit-bar{display:flex}
-.edit-mode .erg-card{border:2px dashed var(--cit);box-shadow:0 0 0 3px rgba(229,254,82,.07)}
-.edit-btn-sm{background:var(--cb);color:var(--cit);border:none;border-radius:6px;padding:4px 10px;font-size:.66rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;font-family:var(--fs);box-shadow:0 3px 10px rgba(0,0,0,.2);transition:background var(--tr)}
-.edit-btn-sm:hover{background:var(--teal)}
-.edit-btn-sm.danger{background:var(--red);color:#fff}
-.edit-btn-sm.danger:hover{background:#a93226}
-.add-erg-card{display:none;background:#fff;border:2px dashed #c0c0bb;border-radius:var(--r);min-height:180px;align-items:center;justify-content:center;flex-direction:column;gap:9px;cursor:pointer;transition:border-color var(--tr)}
-.add-erg-card:hover{border-color:var(--teal)}
-.add-erg-card__icon{font-size:1.9rem;color:#b0b0aa}
-.add-erg-card__label{font-size:.81rem;font-weight:700;color:#8a9eab;letter-spacing:.04em}
-.edit-mode .add-erg-card{display:flex}
+  /* ── FOOTER ── */
+  footer { background: var(--blue); padding: 52px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .f-logo { font-size: 20px; font-weight: 500; color: var(--white); letter-spacing: 0.05em; }
+  .f-logo span { color: var(--citron); }
+  .f-text { font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; }
+  .f-link { color: var(--citron); text-decoration: none; font-size: 13px; transition: opacity 0.2s; }
+  .f-link:hover { opacity: 0.8; }
 
-/* GOVERNANCE */
-.gov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.gov-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:24px 20px;transition:background var(--tr)}
-.gov-card:hover{background:rgba(255,255,255,.1)}
-.gov-card__role{font-family:var(--fm);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--cit);margin-bottom:8px}
-.gov-card__title{font-family:var(--fd);font-size:1.25rem;margin-bottom:10px}
-.gov-card__desc{font-size:.81rem;line-height:1.65;color:var(--ice)}
-.gov-card__items{margin-top:12px;padding:0;list-style:none}
-.gov-card__items li{font-size:.78rem;color:var(--ice);padding:4px 0 4px 13px;position:relative;opacity:.85}
-.gov-card__items li::before{content:'';position:absolute;left:0;top:10px;width:5px;height:5px;border-radius:50%;background:var(--cit)}
-
-/* STEPS */
-.steps{position:relative}
-.steps::before{content:'';position:absolute;left:24px;top:28px;bottom:28px;width:2px;background:linear-gradient(to bottom,var(--cit),var(--pur))}
-.step{display:flex;gap:20px;align-items:flex-start;padding:0 0 30px}
-.step:last-child{padding-bottom:0}
-.step__num{width:48px;height:48px;border-radius:50%;background:var(--cit);color:var(--cb);font-weight:800;font-size:.92rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;border:3px solid var(--lg)}
-.step__content{padding-top:9px}
-.step__title{font-weight:700;font-size:.93rem;margin-bottom:5px;color:var(--cb)}
-.step__body{font-size:.81rem;line-height:1.65;color:#4a6070}
-
-/* FORM */
-.form-section{background:#fff;border-radius:16px;padding:42px;border:1px solid #deded9;max-width:680px;margin:0 auto;box-shadow:0 8px 32px rgba(10,44,67,.07)}
-.form-section h2{font-family:var(--fd);font-size:1.75rem;margin-bottom:9px;color:var(--cb)}
-.form-intro{font-size:.86rem;line-height:1.7;color:#4a6070;margin-bottom:28px;padding-bottom:26px;border-bottom:1px solid #eeeee9}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.form-group{margin-bottom:18px}
-.form-group label{display:block;font-size:.76rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--cb);margin-bottom:6px}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:2px solid #d8d8d4;border-radius:8px;background:var(--lg);color:var(--cb);font-size:.87rem;outline:none;transition:border-color var(--tr),background var(--tr)}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--teal);background:#fff}
-.form-group textarea{resize:vertical;min-height:90px}
-.form-hint{font-size:.71rem;color:#8a9eab;margin-top:4px;font-family:var(--fm)}
-.form-submit{margin-top:24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.form-note{font-size:.74rem;color:#8a9eab;font-family:var(--fm)}
-.form-success{display:none;text-align:center;padding:32px 20px}
-.form-success__icon{font-size:2.6rem;margin-bottom:12px}
-.form-success__title{font-family:var(--fd);font-size:1.5rem;color:var(--cb);margin-bottom:8px}
-.form-success__body{font-size:.86rem;color:#4a6070;line-height:1.7}
-
-/* FAQ */
-.faq-list{max-width:680px;margin:0 auto}
-.faq-item{border-bottom:1px solid rgba(255,255,255,.12)}
-.faq-item:first-child{border-top:1px solid rgba(255,255,255,.12)}
-.faq-q{width:100%;background:none;border:none;color:var(--lg);text-align:left;padding:17px 0;font-size:.9rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--fs);transition:color var(--tr)}
-.faq-q:hover{color:var(--cit)}
-.faq-q .fi{flex-shrink:0;width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:transform var(--tr)}
-.faq-item.open .fi{transform:rotate(45deg)}
-.faq-a{font-size:.84rem;line-height:1.75;color:var(--ice);max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease}
-.faq-item.open .faq-a{max-height:300px;padding-bottom:16px}
-.faq-admin-bar{display:none;gap:6px;margin-top:4px;padding-bottom:10px}
-.admin-active .faq-admin-bar{display:flex}
-.add-faq-btn{display:none;background:rgba(229,254,82,.15);color:var(--cit);border:1px dashed var(--cit);border-radius:6px;padding:8px 16px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:var(--fs);margin-top:16px;transition:background var(--tr)}
-.add-faq-btn:hover{background:rgba(229,254,82,.25)}
-.admin-active .add-faq-btn{display:block}
-
-/* FOOTER */
-.footer{background:#071d2c;color:rgba(235,235,231,.5);padding:30px 0;text-align:center}
-.footer__inner{display:flex;flex-direction:column;align-items:center;gap:6px}
-.footer__logo{font-family:var(--fm);font-size:.67rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cit);margin-bottom:3px}
-.footer p{font-size:.74rem}
-
-/* MODALS */
-.mo{position:fixed;inset:0;background:rgba(7,20,30,.72);z-index:9000;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
-.mo.open{display:flex}
-.md{background:#fff;border-radius:16px;padding:36px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35)}
-@keyframes mIn{from{opacity:0;transform:scale(.96) translateY(10px)}to{opacity:1;transform:none}}
-.mo.open .md{animation:mIn .2s ease}
-.md__close{position:absolute;top:13px;right:13px;background:var(--lg);border:none;border-radius:50%;width:30px;height:30px;font-size:.9rem;cursor:pointer;color:var(--cb);display:flex;align-items:center;justify-content:center;transition:background var(--tr)}
-.md__close:hover{background:#d0d0cb}
-.md__title{font-family:var(--fd);font-size:1.5rem;color:var(--cb);margin-bottom:4px}
-.md__sub{font-size:.78rem;color:#7a8f9c;font-family:var(--fm);margin-bottom:24px;letter-spacing:.04em}
-.mf{margin-bottom:15px}
-.mf label{display:block;font-size:.71rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cb);margin-bottom:5px}
-.mf input,.mf textarea,.mf select{width:100%;padding:10px 13px;border:2px solid #d8d8d4;border-radius:8px;background:var(--lg);color:var(--cb);font-size:.85rem;outline:none;transition:border-color var(--tr)}
-.mf input:focus,.mf textarea:focus,.mf select:focus{border-color:var(--teal);background:#fff}
-.mf textarea{resize:vertical;min-height:80px}
-.mf-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.mf-hint{font-size:.68rem;color:#8a9eab;font-family:var(--fm);margin-top:4px}
-.md__actions{margin-top:22px;display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap}
-.md__actions .btn{padding:10px 20px}
-.login-lock{font-size:2.5rem;margin-bottom:12px;text-align:center}
-.login-error{color:var(--red);font-size:.76rem;font-family:var(--fm);margin-top:6px;display:none}
-.login-error.on{display:block}
-.join-slack-note{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:11px 13px;font-size:.79rem;color:#0369a1;margin-bottom:16px;font-family:var(--fm)}
-
-/* ERG DETAIL MODAL */
-.erg-detail-md{max-width:860px;padding:0;overflow:hidden;border-radius:16px}
-.erd-header{background:var(--cb);color:var(--lg);padding:28px 32px 24px;position:relative}
-.erd-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.12);border:none;border-radius:50%;width:30px;height:30px;font-size:.9rem;cursor:pointer;color:var(--lg);display:flex;align-items:center;justify-content:center;transition:background var(--tr)}
-.erd-close:hover{background:rgba(255,255,255,.22)}
-.erd-emoji{font-size:2.2rem;margin-bottom:8px}
-.erd-name{font-family:var(--fd);font-size:1.8rem;margin-bottom:2px}
-.erd-fullname{font-family:var(--fm);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ice);margin-bottom:11px}
-.erd-mission{font-size:.88rem;color:var(--ice);line-height:1.65;max-width:580px;margin-bottom:18px}
-.erd-meta-row{display:flex;gap:24px;flex-wrap:wrap}
-.erd-meta-item .label{font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(201,236,238,.7);margin-bottom:2px}
-.erd-meta-item .val{font-size:.82rem;font-weight:600;color:var(--lg)}
-.erd-body{display:grid;grid-template-columns:1fr 1fr;max-height:58vh}
-.erd-cal-pane{padding:22px;border-right:1px solid #eeeee9;overflow-y:auto}
-.erd-evt-pane{padding:22px;overflow-y:auto;background:#fafaf7}
-.erd-pane-title{font-family:var(--fm);font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--teal);margin-bottom:14px}
-.erd-footer{padding:14px 24px;background:var(--lg);border-top:1px solid #e0e0da;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.erd-footer span{font-size:.78rem;color:#7a8f9c;font-family:var(--fm)}
-
-/* CALENDAR */
-.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.cal-nav-btn{background:none;border:1.5px solid #d0d0cc;border-radius:6px;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all var(--tr);color:var(--cb)}
-.cal-nav-btn:hover{background:var(--cb);color:var(--cit);border-color:var(--cb)}
-.cal-month-label{font-family:var(--fm);font-size:.76rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--cb)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.cal-dow{text-align:center;font-family:var(--fm);font-size:.59rem;letter-spacing:.06em;text-transform:uppercase;color:#8fa3b0;padding:3px 0;margin-bottom:2px}
-.cal-day{text-align:center;padding:5px 2px;border-radius:6px;cursor:pointer;position:relative;transition:background var(--tr);min-height:28px;display:flex;flex-direction:column;align-items:center;font-size:.76rem;line-height:1.4}
-.cal-day:hover{background:#f0f0ec}
-.cal-day.empty{cursor:default}
-.cal-day.has-event{background:#f0f9f0}
-.cal-day.has-event:hover{background:#dcf0dc}
-.cal-day.selected{background:var(--cb)!important;color:#fff}
-.cal-day.today{font-weight:800;color:var(--teal)}
-.cal-dots{display:flex;gap:2px;justify-content:center;margin-top:2px;flex-wrap:wrap}
-.cal-dot{width:4px;height:4px;border-radius:50%;background:var(--teal)}
-.cal-day.selected .cal-dot{background:var(--cit)}
-
-/* EVENT CARDS (detail modal) */
-.event-list{display:flex;flex-direction:column;gap:10px}
-.event-card{background:#fff;border-radius:10px;border:1px solid #e0e0da;padding:14px 16px}
-.event-card__date{font-family:var(--fm);font-size:.63rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:4px}
-.event-card__title{font-weight:700;font-size:.9rem;color:var(--cb);margin-bottom:5px}
-.event-card__meta{font-size:.77rem;color:#5a7080;margin-bottom:8px;display:flex;flex-direction:column;gap:2px}
-.event-card__actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.event-card__link{font-size:.75rem;font-weight:700;color:var(--teal);font-family:var(--fm);letter-spacing:.04em}
-.event-card__link:hover{text-decoration:underline}
-.evt-signup-btn{background:var(--cb);color:var(--cit);border:none;border-radius:5px;padding:5px 12px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--fs);transition:background var(--tr)}
-.evt-signup-btn:hover{background:var(--teal)}
-.evt-signed-up{background:#d1fae5;color:#065f46;border:none;border-radius:5px;padding:5px 12px;font-size:.72rem;font-weight:700;font-family:var(--fs)}
-.no-events{text-align:center;padding:28px 14px;color:#8fa3b0;font-size:.82rem;font-family:var(--fm)}
-
-/* ADMIN DASHBOARD */
-#adminDash{position:fixed;inset:0;z-index:8000;background:#f0f0ec;display:none;flex-direction:column}
-#adminDash.open{display:flex}
-.dash-nav{background:var(--cb);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;flex-shrink:0;border-bottom:2px solid var(--teal);gap:12px;flex-wrap:wrap}
-.dash-nav__title{font-family:var(--fm);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cit)}
-.dash-nav__tabs{display:flex;gap:3px}
-.dash-tab{background:rgba(255,255,255,.07);color:#aac0cc;border:none;border-radius:6px;padding:5px 14px;font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;font-family:var(--fs);transition:all var(--tr)}
-.dash-tab:hover{background:var(--teal);color:var(--cit)}
-.dash-tab.active{background:var(--cit);color:var(--cb)}
-.dash-close{background:rgba(255,255,255,.08);color:#e8e8e4;border:1.5px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 12px;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:var(--fs);transition:all var(--tr)}
-.dash-close:hover{border-color:var(--cit);color:var(--cit)}
-.dash-body{flex:1;overflow-y:auto;padding:28px 24px}
-.dash-panel{display:none}
-.dash-panel.active{display:block}
-.dash-section-title{font-family:var(--fd);font-size:1.55rem;color:var(--cb);margin-bottom:5px}
-.dash-section-sub{font-size:.82rem;color:#5a7080;margin-bottom:24px;font-family:var(--fm)}
-
-/* REQUEST TABLE */
-.req-filters{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap}
-.req-filter-btn{background:#fff;border:2px solid #ddd;border-radius:20px;padding:4px 14px;font-size:.73rem;font-weight:700;cursor:pointer;font-family:var(--fs);transition:all var(--tr);color:#5a7080}
-.req-filter-btn.active,.req-filter-btn:hover{background:var(--cb);color:var(--cit);border-color:var(--cb)}
-.req-empty{text-align:center;padding:40px 20px;color:#8fa3b0;font-size:.87rem}
-.req-card{background:#fff;border-radius:10px;border:1px solid #e0e0da;padding:18px 20px;margin-bottom:12px}
-.req-card__top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-.req-card__name{font-weight:700;font-size:.95rem;color:var(--cb)}
-.req-card__meta{font-size:.74rem;color:#7a8f9c;font-family:var(--fm);margin-top:2px}
-.req-card__erg{display:inline-block;background:#f0f0ec;border-radius:5px;padding:2px 9px;font-family:var(--fm);font-size:.67rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-top:3px}
-.req-card__body{font-size:.82rem;line-height:1.6;color:#3a5068;margin-bottom:10px;padding:10px 12px;background:#f8f8f5;border-radius:7px;border-left:3px solid var(--teal)}
-.req-card__body strong{display:block;font-size:.67rem;letter-spacing:.08em;text-transform:uppercase;color:#8fa3b0;font-family:var(--fm);margin-bottom:3px}
-.req-card__actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-.req-action-btn{border:none;border-radius:6px;padding:5px 12px;font-size:.72rem;font-weight:700;letter-spacing:.04em;cursor:pointer;font-family:var(--fs);transition:all var(--tr)}
-.req-action-btn.reviewing{background:#fef3c7;color:#92400e}.req-action-btn.reviewing:hover{background:#fde68a}
-.req-action-btn.approved{background:#d1fae5;color:#065f46}.req-action-btn.approved:hover{background:#a7f3d0}
-.req-action-btn.denied{background:#fee2e2;color:#991b1b}.req-action-btn.denied:hover{background:#fecaca}
-.denial-box{margin-top:9px;padding:10px;background:#fff5f5;border-radius:7px;border:1px solid #fecaca}
-.denial-box label{display:block;font-size:.69rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--red);margin-bottom:5px;font-family:var(--fm)}
-.denial-box textarea{width:100%;padding:8px 11px;border:1.5px solid #fca5a5;border-radius:6px;font-size:.81rem;outline:none;resize:vertical;min-height:66px}
-.denial-box .save-denial{background:var(--red);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--fs);margin-top:6px;transition:background var(--tr)}
-.denial-box .save-denial:hover{background:#a93226}
-.denial-saved{margin-top:7px;padding:9px 11px;background:#fff5f5;border:1px solid #fca5a5;border-radius:7px;font-size:.79rem;color:#991b1b}
-.denial-saved strong{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;font-family:var(--fm);margin-bottom:2px}
-
-/* MEMBER TABLE */
-.member-erg-section{margin-bottom:28px}
-.member-erg-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:9px;border-bottom:2px solid #e0e0da}
-.member-erg-name{font-family:var(--fd);font-size:1.2rem;color:var(--cb)}
-.member-erg-count{font-family:var(--fm);font-size:.69rem;letter-spacing:.09em;text-transform:uppercase;color:var(--teal);background:var(--ice);padding:3px 9px;border-radius:999px}
-.mtable{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e0e0da}
-.mtable th{background:var(--cb);color:var(--cit);font-family:var(--fm);font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;padding:9px 14px;text-align:left}
-.mtable td{padding:10px 14px;font-size:.82rem;border-bottom:1px solid #f0f0ec;color:#3a5068}
-.mtable tr:last-child td{border-bottom:none}
-.mtable tr:hover td{background:#f8f8f5}
-.member-empty{text-align:center;padding:28px;color:#8fa3b0;font-size:.82rem;font-family:var(--fm)}
-
-/* ERG HUB */
-.hub-layout{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start}
-.hub-sidebar{background:#fff;border-radius:var(--r);border:1px solid #e0e0da;overflow:hidden}
-.hub-sidebar-title{font-family:var(--fm);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);padding:12px 14px;border-bottom:1px solid #f0f0ec;background:#f8f8f5}
-.hub-erg-btn{width:100%;background:none;border:none;border-bottom:1px solid #f0f0ec;padding:11px 14px;text-align:left;cursor:pointer;font-family:var(--fs);font-size:.84rem;font-weight:600;color:var(--cb);transition:background var(--tr);display:flex;align-items:center;gap:8px}
-.hub-erg-btn:hover{background:var(--lg)}
-.hub-erg-btn.active{background:var(--cb);color:var(--cit)}
-.hub-erg-btn:last-child{border-bottom:none}
-.hub-tabs{display:flex;gap:3px;margin-bottom:20px}
-.hub-tab{background:#fff;border:2px solid #e0e0da;border-radius:6px;padding:7px 18px;font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;font-family:var(--fs);transition:all var(--tr);color:#5a7080}
-.hub-tab:hover{border-color:var(--cb);color:var(--cb)}
-.hub-tab.active{background:var(--cb);color:var(--cit);border-color:var(--cb)}
-.hub-panel{display:none}
-.hub-panel.active{display:block}
-.hub-empty{text-align:center;padding:48px 20px;color:#8fa3b0;font-size:.88rem;font-family:var(--fm)}
-
-/* HUB EVENTS */
-.hub-events-toolbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
-.hub-year-sel{padding:6px 10px;border:2px solid #d0d0cc;border-radius:6px;font-size:.78rem;font-family:var(--fs);background:#fff;outline:none;cursor:pointer}
-.hub-status-tabs{display:flex;gap:3px;flex-wrap:wrap}
-.hub-status-tab{background:#fff;border:1.5px solid #d0d0cc;border-radius:5px;padding:4px 10px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;font-family:var(--fs);transition:all var(--tr);color:#7a8f9c}
-.hub-status-tab.active,.hub-status-tab:hover{background:var(--cb);color:var(--cit);border-color:var(--cb)}
-.admin-evt-card{background:#fff;border-radius:10px;border:1px solid #e0e0da;padding:16px 18px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start}
-.admin-evt-card__date-box{background:var(--cb);color:var(--cit);border-radius:8px;padding:8px 10px;text-align:center;flex-shrink:0;min-width:48px}
-.admin-evt-card__date-box .month{font-family:var(--fm);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
-.admin-evt-card__date-box .day{font-family:var(--fd);font-size:1.4rem;line-height:1}
-.admin-evt-card__body{flex:1;min-width:0}
-.admin-evt-card__title{font-weight:700;font-size:.92rem;color:var(--cb);margin-bottom:4px}
-.admin-evt-card__meta{font-size:.75rem;color:#7a8f9c;font-family:var(--fm);margin-bottom:8px}
-.admin-evt-card__actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.advance-btn{border:none;border-radius:5px;padding:4px 10px;font-size:.7rem;font-weight:700;cursor:pointer;font-family:var(--fs);transition:all var(--tr)}
-.adv--reviewing{background:#fef3c7;color:#92400e}.adv--reviewing:hover{background:#fde68a}
-.adv--approved{background:#d1fae5;color:#065f46}.adv--approved:hover{background:#a7f3d0}
-.adv--final{background:var(--cit);color:var(--cb)}.adv--final:hover{background:#c8e040}
-
-/* BUDGET */
-.budget-year-tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
-.byt{background:#fff;border:2px solid #e0e0da;border-radius:6px;padding:5px 14px;font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--fm);transition:all var(--tr);color:#5a7080;letter-spacing:.04em}
-.byt:hover{border-color:var(--cb);color:var(--cb)}
-.byt.active{background:var(--cb);color:var(--cit);border-color:var(--cb)}
-.byt.archived{background:#f0f0ec;color:#bbb;border-color:#ddd;text-decoration:line-through;cursor:default}
-.budget-overview{background:#fff;border-radius:var(--r);border:1px solid #e0e0da;padding:22px 24px;margin-bottom:18px}
-.budget-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
-.bstat__amount{font-family:var(--fd);font-size:1.8rem;color:var(--cb)}
-.bstat__label{font-family:var(--fm);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:#8fa3b0;margin-top:2px}
-.bstat__amount.spent{color:var(--red)}
-.bstat__amount.remaining-ok{color:var(--green)}
-.bstat__amount.remaining-neg{color:var(--red)}
-.budget-bar-track{background:#f0f0ec;border-radius:999px;height:10px;overflow:hidden;margin-bottom:5px}
-.budget-bar-fill{border-radius:999px;height:100%;transition:width .5s ease}
-.budget-bar-label{display:flex;justify-content:space-between;font-family:var(--fm);font-size:.67rem;color:#8a9eab}
-.budget-alloc-row{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
-.budget-alloc-input{padding:7px 11px;border:2px solid #d8d8d4;border-radius:7px;font-size:.9rem;width:160px;font-family:var(--fm);outline:none;transition:border-color var(--tr)}
-.budget-alloc-input:focus{border-color:var(--teal)}
-.expense-tbl-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.expense-tbl-title{font-weight:700;font-size:.88rem;color:var(--cb)}
-.exp-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e0e0da}
-.exp-table th{background:#f8f8f5;color:#5a7080;font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:1px solid #e0e0da}
-.exp-table td{padding:9px 12px;font-size:.81rem;border-bottom:1px solid #f0f0ec;color:#3a5068}
-.exp-table tr:last-child td{border-bottom:none}
-.exp-table tr:hover td{background:#f8f8f5}
-.exp-del{background:none;border:none;color:#d0d0cc;cursor:pointer;font-size:.85rem;transition:color var(--tr)}
-.exp-del:hover{color:var(--red)}
-.archived-notice{background:#f8f8f5;border:1px solid #e0e0da;border-radius:8px;padding:14px 16px;font-size:.83rem;color:#8fa3b0;text-align:center;font-family:var(--fm)}
-
-/* CONTENT EDITOR */
-.ce-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:20px}
-.ce-tab{background:var(--lg);border:2px solid #d0d0cc;border-radius:6px;padding:4px 12px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--fs);transition:all var(--tr);color:#5a7080}
-.ce-tab:hover{border-color:var(--cb)}
-.ce-tab.active{background:var(--cb);color:var(--cit);border-color:var(--cb)}
-.ce-panel{display:none}
-.ce-panel.active{display:block}
-
-@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-.anim{animation:fu .5s ease both}
-
-@media(max-width:768px){
-  .mf-row,.form-row{grid-template-columns:1fr}
-  .form-section{padding:22px 16px}
-  .stat{border-right:none}
-  .pf__personas,.pf__features,.pf__grid{grid-template-columns:1fr}
-  .erd-body{grid-template-columns:1fr;max-height:none}
-  .erd-cal-pane{border-right:none;border-bottom:1px solid #eeeee9}
-  .hub-layout{grid-template-columns:1fr}
-  .budget-3col{grid-template-columns:1fr 1fr}
-  .dash-nav{height:auto;padding:8px 14px}
-}
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .ben-grid { grid-template-columns: repeat(2,1fr); }
+    .val-grid { grid-template-columns: repeat(2,1fr); }
+    .sched-cols { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .nav-links.open {
+      display: flex; flex-direction: column;
+      position: absolute; top: 64px; left: 0; right: 0;
+      background: var(--blue); padding: 20px 24px 28px; gap: 20px;
+      border-top: 1px solid rgba(255,255,255,0.08); z-index: 100;
+    }
+    .nav-toggle { display: block; }
+    section { padding: 64px 24px; }
+    .hero { grid-template-columns: 1fr; padding: 64px 24px 56px; gap: 40px; min-height: auto; }
+    .hero::before, .hero::after { display: none; }
+    .hero h1 { font-size: 44px; }
+    .welcome-sec { grid-template-columns: 1fr; gap: 40px; }
+    .nho-grid { grid-template-columns: 1fr; }
+    .n-card.full { grid-column: span 1; }
+    .sched-cols { grid-template-columns: 1fr; }
+    .sched-cols .sched-col:not(:first-child) { display: none; }
+    .val-grid { grid-template-columns: 1fr; }
+    .ben-grid { grid-template-columns: repeat(2,1fr); }
+    .sec-title { font-size: 36px; }
+    footer { flex-direction: column; text-align: center; padding: 40px 24px; }
+    .tl-item { grid-template-columns: 72px 28px 1fr; }
+  }
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 38px; }
+    .ben-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
-<body>
-
-<!-- LOGIN MODAL -->
-<div class="mo" id="loginModal">
-  <div class="md" style="max-width:360px;text-align:center">
-    <button class="md__close" onclick="closeM('loginModal')">&#10005;</button>
-    <div class="login-lock">&#128274;</div>
-    <div class="md__title">Admin Login</div>
-    <p class="md__sub">People Experience Team Only</p>
-    <div class="mf" style="text-align:left">
-      <label>Password</label>
-      <input type="password" id="loginPw" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()"/>
-      <div class="login-error" id="loginErr">Incorrect password. Please try again.</div>
-    </div>
-    <div class="md__actions" style="justify-content:center">
-      <button class="btn btn--primary" onclick="doLogin()" style="padding:10px 32px">Log In</button>
-    </div>
-  </div>
-</div>
-
-<!-- ERG EDIT MODAL -->
-<div class="mo" id="ergEditModal">
-  <div class="md">
-    <button class="md__close" onclick="closeM('ergEditModal')">&#10005;</button>
-    <div class="md__title" id="ergEditTitle">Edit ERG</div>
-    <p class="md__sub">Changes saved on submit</p>
-    <input type="hidden" id="em_id"/>
-    <div class="mf-row">
-      <div class="mf"><label>Short Name</label><input type="text" id="em_name" placeholder="e.g. WOO"/></div>
-      <div class="mf"><label>Emoji</label><input type="text" id="em_emoji" placeholder="&#11088;"/></div>
-    </div>
-    <div class="mf"><label>Full Name</label><input type="text" id="em_fullName" placeholder="e.g. Women of Optro"/></div>
-    <div class="mf"><label>Mission Statement</label><textarea id="em_mission" rows="3"></textarea></div>
-    <div class="mf-row">
-      <div class="mf"><label>Status</label>
-        <select id="em_status"><option value="active">Active</option><option value="forming">Forming</option><option value="pilot">Pilot</option></select>
-      </div>
-      <div class="mf"><label>Accent Color</label><input type="color" id="em_color" style="height:40px;padding:3px 7px;cursor:pointer"/></div>
-    </div>
-    <div class="mf"><label>ELT Sponsor</label><input type="text" id="em_sponsor" placeholder="Name or TBD"/></div>
-    <div class="mf"><label>ERG Lead(s)</label><input type="text" id="em_leads" placeholder="Comma-separated names"/>
-      <p class="mf-hint">Separate multiple names with commas</p></div>
-    <div class="mf-row">
-      <div class="mf"><label>Americas Lead</label><input type="text" id="em_amer"/></div>
-      <div class="mf"><label>EMEA Lead</label><input type="text" id="em_emea"/></div>
-    </div>
-    <div class="mf"><label>APAC Lead</label><input type="text" id="em_apac"/></div>
-    <div class="mf"><label>Slack Channel Link</label><input type="text" id="em_link" placeholder="https://optro.slack.com/archives/..."/>
-      <p class="mf-hint">Members will be redirected here after joining.</p></div>
-    <div class="md__actions">
-      <button class="btn btn--secondary" onclick="closeM('ergEditModal')">Cancel</button>
-      <button class="btn btn--primary" onclick="saveERG()">Save Changes</button>
-    </div>
-  </div>
-</div>
-
-<!-- JOIN MODAL -->
-<div class="mo" id="joinModal">
-  <div class="md" style="max-width:420px">
-    <button class="md__close" onclick="closeM('joinModal')">&#10005;</button>
-    <div class="md__title">Join this ERG</div>
-    <div style="font-family:var(--fd);font-size:1.15rem;color:var(--teal);margin-bottom:4px" id="joinERGName"></div>
-    <p class="md__sub" id="joinERGFull" style="margin-bottom:14px"></p>
-    <div class="join-slack-note" id="joinSlackNote"></div>
-    <div class="mf"><label>Full Name <span style="color:var(--teal)">*</span></label><input type="text" id="j_name" placeholder="Full name"/></div>
-    <div class="mf"><label>Email <span style="color:var(--teal)">*</span></label><input type="email" id="j_email" placeholder="name@optro.com"/></div>
-    <div class="mf"><label>Primary Timezone <span style="color:var(--teal)">*</span></label>
-      <select id="j_tz">
-        <option value="" disabled selected>Select timezone</option>
-        <option>Americas (ET / CT / MT / PT)</option>
-        <option>Europe / Middle East / Africa</option>
-        <option>Asia Pacific</option>
-      </select>
-    </div>
-    <div class="md__actions">
-      <button class="btn btn--secondary" onclick="closeM('joinModal')">Cancel</button>
-      <button class="btn btn--primary" id="joinSubmitBtn" onclick="submitJoin()">Join ERG</button>
-    </div>
-  </div>
-</div>
-
-<!-- ERG DETAIL MODAL -->
-<div class="mo" id="ergDetailModal">
-  <div class="md erg-detail-md">
-    <div class="erd-header" id="erd-header">
-      <button class="erd-close" onclick="closeM('ergDetailModal')">&#10005;</button>
-      <div class="erd-emoji" id="erd-emoji"></div>
-      <div class="erd-name" id="erd-name"></div>
-      <div class="erd-fullname" id="erd-fullname"></div>
-      <div class="erd-mission" id="erd-mission"></div>
-      <div class="erd-meta-row">
-        <div class="erd-meta-item"><div class="label">ELT Sponsor</div><div class="val" id="erd-sponsor"></div></div>
-        <div class="erd-meta-item"><div class="label">ERG Lead(s)</div><div class="val" id="erd-leads"></div></div>
-        <div class="erd-meta-item"><div class="label">Members</div><div class="val" id="erd-members"></div></div>
-      </div>
-    </div>
-    <div class="erd-body">
-      <div class="erd-cal-pane">
-        <div class="erd-pane-title">Events Calendar</div>
-        <div id="cal"></div>
-      </div>
-      <div class="erd-evt-pane">
-        <div class="erd-pane-title" id="erd-evt-title">Upcoming Events</div>
-        <div class="event-list" id="erd-evt-list"></div>
-      </div>
-    </div>
-    <div class="erd-footer">
-      <span>Interested in joining this community?</span>
-      <button class="btn btn--primary btn--sm" onclick="openJoinFromDetail()">Join ERG</button>
-    </div>
-  </div>
-</div>
-
-<!-- EVENT EDIT MODAL -->
-<div class="mo" id="eventEditModal">
-  <div class="md">
-    <button class="md__close" onclick="closeM('eventEditModal')">&#10005;</button>
-    <div class="md__title" id="evtEditTitle">Add Event</div>
-    <p class="md__sub" id="evtEditSub">New events start in Created status</p>
-    <input type="hidden" id="ev_id"/>
-    <input type="hidden" id="ev_ergId"/>
-    <div class="mf"><label>Event Title <span style="color:var(--teal)">*</span></label><input type="text" id="ev_title" placeholder="e.g. Women in Tech Panel"/></div>
-    <div class="mf"><label>Description</label><textarea id="ev_desc" rows="3" placeholder="What will happen at this event?"></textarea></div>
-    <div class="mf-row">
-      <div class="mf"><label>Date <span style="color:var(--teal)">*</span></label><input type="date" id="ev_date"/></div>
-      <div class="mf"><label>Start Time</label><input type="time" id="ev_time"/></div>
-    </div>
-    <div class="mf-row">
-      <div class="mf"><label>End Time</label><input type="time" id="ev_endtime"/></div>
-      <div class="mf"><label>Est. Budget ($)</label><input type="number" id="ev_budget" placeholder="0" min="0"/></div>
-    </div>
-    <div class="mf"><label>Location</label><input type="text" id="ev_location" placeholder="Virtual / Zoom, or address"/></div>
-    <div class="mf"><label>Event Link / RSVP URL</label><input type="text" id="ev_link" placeholder="https://..."/></div>
-    <div class="mf-row">
-      <div class="mf"><label>Point of Contact</label><input type="text" id="ev_poc" placeholder="Name"/></div>
-      <div class="mf"><label>POC Email</label><input type="email" id="ev_pocEmail" placeholder="name@optro.com"/></div>
-    </div>
-    <div class="md__actions">
-      <button class="btn btn--secondary" onclick="closeM('eventEditModal')">Cancel</button>
-      <button class="btn btn--primary" onclick="saveEvent()">Save Event</button>
-    </div>
-  </div>
-</div>
-
-<!-- EXPENSE MODAL -->
-<div class="mo" id="expenseModal">
-  <div class="md">
-    <button class="md__close" onclick="closeM('expenseModal')">&#10005;</button>
-    <div class="md__title">Add Expense</div>
-    <p class="md__sub" id="expSub">Log spend against this year's budget</p>
-    <input type="hidden" id="exp_ergId"/>
-    <input type="hidden" id="exp_year"/>
-    <div class="mf"><label>Description <span style="color:var(--teal)">*</span></label><input type="text" id="exp_desc" placeholder="e.g. Venue rental"/></div>
-    <div class="mf-row">
-      <div class="mf"><label>Amount ($) <span style="color:var(--teal)">*</span></label><input type="number" id="exp_amount" placeholder="0.00" min="0" step="0.01"/></div>
-      <div class="mf"><label>Category</label>
-        <select id="exp_cat">
-          <option>Events</option><option>Food &amp; Beverage</option><option>Speakers</option>
-          <option>Marketing</option><option>Swag</option><option>Travel</option><option>Other</option>
-        </select>
-      </div>
-    </div>
-    <div class="mf"><label>Date</label><input type="date" id="exp_date"/></div>
-    <div class="mf"><label>Notes</label><textarea id="exp_notes" rows="2" placeholder="Optional notes or receipt reference"></textarea></div>
-    <div class="md__actions">
-      <button class="btn btn--secondary" onclick="closeM('expenseModal')">Cancel</button>
-      <button class="btn btn--primary" onclick="saveExpense()">Add Expense</button>
-    </div>
-  </div>
-</div>
-
-<!-- EVENT SIGNUP MODAL -->
-<div class="mo" id="evtSignupModal">
-  <div class="md" style="max-width:400px">
-    <button class="md__close" onclick="closeM('evtSignupModal')">&#10005;</button>
-    <div class="md__title">Sign Up for Event</div>
-    <div id="evtSignupName" style="font-family:var(--fm);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--teal);margin-bottom:16px"></div>
-    <div class="mf"><label>Full Name <span style="color:var(--teal)">*</span></label><input type="text" id="es_name" placeholder="Full name"/></div>
-    <div class="mf"><label>Email <span style="color:var(--teal)">*</span></label><input type="email" id="es_email" placeholder="name@optro.com"/></div>
-    <div class="md__actions">
-      <button class="btn btn--secondary" onclick="closeM('evtSignupModal')">Cancel</button>
-      <button class="btn btn--primary" onclick="submitEvtSignup()">Confirm Signup</button>
-    </div>
-  </div>
-</div>
-
-<!-- CONTENT EDITOR MODAL -->
-<div class="mo" id="contentModal">
-  <div class="md" style="max-width:640px">
-    <button class="md__close" onclick="closeM('contentModal')">&#10005;</button>
-    <div class="md__title">Edit Site Content</div>
-    <p class="md__sub">Changes save to this browser. To push to all users, update the HTML file defaults and redeploy.</p>
-    <div class="ce-tabs" id="ceTabs"></div>
-    <div id="cePanels"></div>
-    <div class="md__actions">
-      <button class="btn btn--secondary" onclick="closeM('contentModal')">Cancel</button>
-      <button class="btn btn--primary" id="ceSubmit" onclick="">Save Changes</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADMIN DASHBOARD -->
-<div id="adminDash">
-  <div class="dash-nav">
-    <span class="dash-nav__title">&#9881; Admin Dashboard</span>
-    <div class="dash-nav__tabs">
-      <button class="dash-tab active" onclick="switchDashTab('Requests',this)">&#128203; Requests</button>
-      <button class="dash-tab" onclick="switchDashTab('Members',this)">&#128101; Members</button>
-      <button class="dash-tab" onclick="switchDashTab('Hub',this)">&#9881; ERG Hub</button>
-    </div>
-    <button class="dash-close" onclick="closeDash()">&#8592; Back to Site</button>
-  </div>
-  <div class="dash-body">
-    <div class="dash-panel active" id="dashRequests">
-      <div class="dash-section-title">ERG Request Queue</div>
-      <p class="dash-section-sub">Review, approve, or deny incoming ERG formation requests.</p>
-      <div class="req-filters">
-        <button class="req-filter-btn active" onclick="filterReqs('all',this)">All</button>
-        <button class="req-filter-btn" onclick="filterReqs('pending',this)">Pending</button>
-        <button class="req-filter-btn" onclick="filterReqs('reviewing',this)">Reviewing</button>
-        <button class="req-filter-btn" onclick="filterReqs('approved',this)">Approved</button>
-        <button class="req-filter-btn" onclick="filterReqs('denied',this)">Denied</button>
-      </div>
-      <div id="reqList"></div>
-    </div>
-    <div class="dash-panel" id="dashMembers">
-      <div class="dash-section-title">ERG Membership Roster</div>
-      <p class="dash-section-sub">All employees who have joined an ERG through this page.</p>
-      <div id="memberList"></div>
-    </div>
-    <div class="dash-panel" id="dashHub">
-      <div class="dash-section-title">ERG Hub</div>
-      <p class="dash-section-sub">Manage events and track budgets for each ERG. Only events marked Final appear publicly.</p>
-      <div class="hub-layout" id="hubLayout"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ADMIN BANNER -->
-<div class="admin-banner" id="adminBanner">
-  &#9998;&nbsp; Admin Mode Active &mdash;
-  <span style="cursor:pointer;text-decoration:underline" onclick="openContentEditor()">Edit Page Content</span>
-  &nbsp;|&nbsp; Click &#128197; buttons in ERG Hub to manage events &nbsp;|&nbsp;
-  <span style="cursor:pointer;text-decoration:underline" onclick="openDash()">Open Dashboard</span>
-</div>
+<body id="top">
 
 <!-- NAV -->
-<nav class="nav">
-  <div class="container nav__inner">
-    <span class="nav__logo">Optro &mdash; People Experience</span>
-    <ul class="nav__links">
-      <li><a href="#our-ergs">Our ERGs</a></li>
-      
-      <li><a href="#how-it-works">How It Works</a></li>
-      <li><a href="#governance">Governance</a></li>
-      <li><a href="#request">Request an ERG</a></li>
-      <li><a href="#faq">FAQ</a></li>
-      <li><span class="admin-badge" id="adminBadge">Admin</span></li>
-      <li><button id="navDashBtn" onclick="openDash()">&#128203; Dashboard</button></li>
-      <li><button id="navAdminBtn" onclick="handleAdminBtn()">Admin Login</button></li>
-    </ul>
-  </div>
+<nav>
+  <a href="#top" class="nav-logo">opt<span>ro</span></a>
+  <ul class="nav-links" id="navmenu">
+    <li><a href="#welcome">Welcome</a></li>
+    <li><a href="#nho">NHO</a></li>
+    <li><a href="#nho-dates">Cohort Dates</a></li>
+    <li><a href="#week-one">Week One</a></li>
+    <li><a href="#culture">Culture</a></li>
+    <li><a href="#benefits">Benefits</a></li>
+  </ul>
+  <button class="nav-toggle" aria-label="Toggle menu" onclick="document.getElementById('navmenu').classList.toggle('open')">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round">
+      <path d="M3 6h16M3 11h16M3 16h16"/>
+    </svg>
+  </button>
 </nav>
 
 <!-- HERO -->
-<header class="hero" id="heroSection">
-  <div class="container">
-    <p class="hero__eyebrow">Employee Resource Groups</p>
-    <div class="adm-wrap">
-      <h1 class="hero__heading adm-editable anim" id="heroHeading"></h1>
-      <button class="adm-pen" onclick="openFieldEdit('heroHeading','Hero Heading','html')">&#9998;</button>
-    </div>
-    <div class="adm-wrap" style="margin-bottom:34px">
-      <p class="hero__body adm-editable anim" id="heroBody" style="animation-delay:.1s"></p>
-      <button class="adm-pen" onclick="openFieldEdit('heroBody','Hero Body Text','text')">&#9998;</button>
-    </div>
-    <div class="hero__ctas anim" style="animation-delay:.2s">
-      <a href="#our-ergs" class="btn btn--primary">Explore Our ERGs</a>
-      <a href="#request" class="btn btn--ghost">Request a New ERG</a>
-    </div>
+<section class="hero">
+  <div>
+    <div class="eyebrow-pill">Pre-Onboarding Guide</div>
+    <h1>Welcome,<br><em>Optronaut.</em></h1>
+    <p class="hero-sub">You're officially part of the crew. This guide walks you through everything you need to feel prepared, connected, and ready for launch. From wherever you are.</p>
+    <a href="#welcome" class="btn-primary">Let's get started</a>
   </div>
-</header>
-
-<!-- STATS -->
-<div class="stats">
-  <div class="container stats__inner">
-    <div class="stat"><div class="stat__number" id="statActive">0</div><div class="stat__label">Active ERGs</div></div>
-    <div class="stat"><div class="stat__number" id="statForming">0</div><div class="stat__label">Forming</div></div>
-    <div class="stat"><div class="stat__number" id="statMembers">0</div><div class="stat__label">Total Members</div></div>
-    <div class="stat"><div class="stat__number" id="statEvents">0</div><div class="stat__label">Upcoming Events</div></div>
-  </div>
-</div>
-
-<!-- HOW IT WORKS -->
-<section class="section" id="how-it-works">
-  <div class="container">
-    <p class="section__label">How It Works</p>
-    <div class="adm-wrap">
-      <h2 class="section__heading adm-editable" id="howHeading"></h2>
-      <button class="adm-pen" onclick="openFieldEdit('howHeading','How It Works Heading','text')">&#9998;</button>
-    </div>
-    <div class="adm-wrap">
-      <p class="section__intro adm-editable" id="howIntro"></p>
-      <button class="adm-pen" onclick="openFieldEdit('howIntro','How It Works Intro','text')">&#9998;</button>
-    </div>
-    <div class="pillars" id="pillarsContainer"></div>
-  </div>
-</section>
-
-<!-- ERG LISTING -->
-<section class="section section--alt" id="our-ergs">
-  <div class="container">
-    <p class="section__label">Our ERGs</p>
-    <div class="adm-wrap">
-      <h2 class="section__heading adm-editable" id="ergsHeading"></h2>
-      <button class="adm-pen" onclick="openFieldEdit('ergsHeading','ERGs Section Heading','text')">&#9998;</button>
-    </div>
-    <div class="adm-wrap">
-      <p class="section__intro adm-editable" id="ergsIntro"></p>
-      <button class="adm-pen" onclick="openFieldEdit('ergsIntro','ERGs Section Intro','text')">&#9998;</button>
-    </div>
-    <div class="search-bar">
-      <span class="search-bar__icon">&#128269;</span>
-      <input type="text" id="ergSearch" placeholder="Search ERGs..." aria-label="Search ERGs"/>
-    </div>
-    <div class="erg-grid" id="ergGrid"></div>
-    <div class="no-results" id="noResults">No ERGs match your search. <a href="#request" style="color:var(--teal);font-weight:700">Request a new one.</a></div>
-  </div>
-</section>
-
-<!-- GOVERNANCE -->
-<section class="section section--dark" id="governance">
-  <div class="container">
-    <p class="section__label">Structure &amp; Governance</p>
-    <div class="adm-wrap">
-      <h2 class="section__heading adm-editable" id="govHeading"></h2>
-      <button class="adm-pen" style="background:var(--cit)" onclick="openFieldEdit('govHeading','Governance Heading','text')">&#9998;</button>
-    </div>
-    <div class="adm-wrap">
-      <p class="section__intro adm-editable" id="govIntro"></p>
-      <button class="adm-pen" style="background:var(--cit)" onclick="openFieldEdit('govIntro','Governance Intro','text')">&#9998;</button>
-    </div>
-    <div class="gov-grid">
-      <div class="gov-card"><div class="gov-card__role">Governance Body</div><div class="gov-card__title">DIBS</div><div class="gov-card__desc">DIBS is the central governance body for ERGs, led by the People Experience team. It provides structure, oversight, and support so ERGs can operate with consistency.</div><ul class="gov-card__items"><li>Mentors and supports ERG leaders</li><li>Manages the centralized programming budget</li><li>Reviews and approves funding proposals</li><li>Hosts quarterly cross-ERG syncs</li><li>Connects ERGs to Internal Comms and People Team</li></ul></div>
-      <div class="gov-card"><div class="gov-card__role">Community Leaders</div><div class="gov-card__title">ERG Leaders</div><div class="gov-card__desc">ERG leaders set the vision, build programming, and cultivate belonging within their community. Each ERG designates leads across active timezones.</div><ul class="gov-card__items"><li>Define the ERG mission and goals</li><li>Plan events and engagement opportunities</li><li>Submit programming proposals to DIBS</li><li>Coordinate across timezone leads</li><li>Participate in cross-ERG leadership syncs</li></ul></div>
-      <div class="gov-card"><div class="gov-card__role">Senior Leadership</div><div class="gov-card__title">Executive Sponsors</div><div class="gov-card__desc">Executive sponsors provide visibility and strategic guidance for each ERG, amplifying ERG work within leadership conversations.</div><ul class="gov-card__items"><li>Align ERG programming with company priorities</li><li>Increase visibility of ERG initiatives</li><li>Participate in select events and discussions</li><li>Advocate for ERG communities within leadership</li></ul></div>
-    </div>
-  </div>
-</section>
-
-<!-- FORMATION -->
-<section class="section" id="formation">
-  <div class="container">
-    <p class="section__label">Starting a New ERG</p>
-    <div class="adm-wrap">
-      <h2 class="section__heading adm-editable" id="formHeading"></h2>
-      <button class="adm-pen" onclick="openFieldEdit('formHeading','Formation Heading','text')">&#9998;</button>
-    </div>
-    <div class="adm-wrap">
-      <p class="section__intro adm-editable" id="formIntro"></p>
-      <button class="adm-pen" onclick="openFieldEdit('formIntro','Formation Intro','text')">&#9998;</button>
-    </div>
-    <div class="steps">
-      <div class="step"><div class="step__num">1</div><div class="step__content"><div class="step__title">Submit an Interest Form</div><div class="step__body">Any Optro employee can request a new ERG using the form below. Describe the community, why it matters, and your initial interest in leading it.</div></div></div>
-      <div class="step"><div class="step__num">2</div><div class="step__content"><div class="step__title">Build a Leadership Team</div><div class="step__body">New groups need a core leadership team and a mission statement. Each ERG must designate a lead for each active timezone from the start.</div></div></div>
-      <div class="step"><div class="step__num">3</div><div class="step__content"><div class="step__title">DIBS Review and Approval</div><div class="step__body">DIBS reviews the proposal alongside the People Team and leadership sponsors. Groups are assessed based on employee interest and capacity.</div></div></div>
-      <div class="step"><div class="step__num">4</div><div class="step__content"><div class="step__title">Onboarding and Launch Prep</div><div class="step__body">Approved ERG leaders join DIBS onboarding and receive launch resources, templates, and guidance on submitting their first programming proposals.</div></div></div>
-      <div class="step"><div class="step__num">5</div><div class="step__content"><div class="step__title">Soft Launch</div><div class="step__body">The ERG soft launches with initial programming, communications coordinated with Internal Comms, and a community channel set up for all timezones.</div></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- REQUEST FORM -->
-<section class="section section--alt" id="request">
-  <div class="container">
-    <div class="form-section">
-      <h2>Request a New ERG</h2>
-      <p class="form-intro">Don't see a group that reflects your community or interest? Submit a request below. DIBS reviews all submissions and will follow up within two weeks.</p>
-      <div id="ergReqForm">
-        <div class="form-row">
-          <div class="form-group"><label>Your Name <span class="req" style="color:var(--teal)">*</span></label><input type="text" id="f_name" placeholder="Full name"/></div>
-          <div class="form-group"><label>Your Email <span class="req" style="color:var(--teal)">*</span></label><input type="email" id="f_email" placeholder="name@optro.com"/></div>
-        </div>
-        <div class="form-group"><label>Primary Timezone <span style="color:var(--teal)">*</span></label>
-          <select id="f_tz">
-            <option value="" disabled selected>Select timezone</option>
-            <option>Americas (ET / CT / MT / PT)</option>
-            <option>Europe / Middle East / Africa</option>
-            <option>Asia Pacific</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Proposed ERG Name <span style="color:var(--teal)">*</span></label><input type="text" id="f_ergname" placeholder="e.g. Parents &amp; Caregivers at Optro"/></div>
-        <div class="form-group"><label>Community or Focus Area <span style="color:var(--teal)">*</span></label>
-          <select id="f_type">
-            <option value="" disabled selected>Select a category</option>
-            <option>Identity-based (race, ethnicity, gender, orientation, etc.)</option>
-            <option>Life stage (parents, caregivers, veterans, etc.)</option>
-            <option>Neurodiversity or disability</option>
-            <option>Professional interest or affinity</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Why does this ERG matter at Optro? <span style="color:var(--teal)">*</span></label><textarea id="f_why" placeholder="Describe the community this ERG would serve and why." rows="4"></textarea></div>
-        <div class="form-group"><label>Are you interested in helping lead this ERG?</label>
-          <select id="f_lead">
-            <option value="" disabled selected>Select one</option>
-            <option>Yes, I would like to lead or co-lead</option>
-            <option>Yes, I can help but not in a primary leadership role</option>
-            <option>No, I am just flagging the need</option>
-            <option>Not sure yet</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Anything else you'd like to share?</label><textarea id="f_notes" rows="3" placeholder="Optional: names of others who might be interested, programming ideas, etc."></textarea><p class="form-hint">All submissions reviewed by the People Experience team.</p></div>
-        <div class="form-submit">
-          <button class="btn btn--primary" onclick="submitERGRequest()" style="padding:12px 26px">Submit Request</button>
-          <span class="form-note">Reviewed by DIBS within 2 weeks</span>
-        </div>
+  <div class="hero-card reveal">
+    <p class="hc-label">Your onboarding path</p>
+    <div class="path-cards">
+      <div class="path-on">
+        <p class="path-lbl">On-Cycle</p>
+        <p>New Hire Orientation begins your first day: 3 mornings of live virtual sessions with your fellow Optronauts.</p>
       </div>
-      <div class="form-success" id="reqFormSuccess">
-        <div class="form-success__icon">&#127881;</div>
-        <div class="form-success__title">Request received!</div>
-        <p class="form-success__body">Thank you for submitting your ERG request. The People Experience team and DIBS will follow up within two weeks.</p>
+      <div class="path-off">
+        <p class="path-lbl">Off-Cycle</p>
+        <p>Role-based onboarding starts your first week. You'll link up with your fellow Optronauts at the next On-Cycle NHO the following Monday.</p>
+      </div>
+    </div>
+    <p class="chk-label">Before you start</p>
+    <ul class="chklist">
+      <li>
+        <span class="dot-done"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#0a2c43" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        Offer letter signed
+      </li>
+      <li><span class="dot-open"></span>Equipment shipped to your address</li>
+      <li><span class="dot-open"></span>NHO calendar invite confirmed — first 3 sessions sent to your personal email, remaining sessions to your Optro email</li>
+    </ul>
+  </div>
+</section>
+
+<!-- WELCOME -->
+<section class="welcome-sec" id="welcome">
+  <div class="reveal">
+    <span class="eyebrow">Welcome</span>
+    <h2 class="sec-title">A note from<br>the People team</h2>
+    <blockquote class="welcome-quote">"Every Optronaut, wherever they are, belongs here."</blockquote>
+    <div class="welcome-body">
+      <p>Welcome to Optro, and welcome to the crew. You're now an Optronaut. We're on a mission to redefine GRC through a single, AI-powered system of action — and we brought you in because we believe you're exactly the right person to help us get there.</p>
+      <p>Optro (formerly AuditBoard) is trusted by over 50% of the Fortune 500. We're practitioners building for practitioners, and that same ethos extends to how we build our team of Optronauts: curious, driven, and ready to do meaningful work.</p>
+      <p>This guide is your pre-launch checklist. Use it to feel grounded before Day One. And reach out to the People Experience Team any time — seriously, no question is too small for a fellow Optronaut.</p>
+    </div>
+    <div class="sig">
+      <p class="sig-name">Paaras Parker</p>
+      <p class="sig-role">Chief Human Resources Officer, Optro</p>
+    </div>
+  </div>
+  <div class="info-stack">
+    <div class="info-card reveal d1">
+      <div class="ic-icon" style="background:var(--ice);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0e5371" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20"/></svg>
+      </div>
+      <div>
+        <h4>Your Day One invite</h4>
+        <p>Your first 3 NHO session invites will be sent to your <strong>personal email</strong>. All remaining session invites go to your <strong>Optro email</strong> once your account is set up. Reach out if you don't see them at least 3 business days before your start date.</p>
+      </div>
+    </div>
+    <div class="info-card reveal d2">
+      <div class="ic-icon" style="background:var(--teal-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0e5371" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <div>
+        <h4>Equipment</h4>
+        <p>Your laptop and accessories will be shipped to the address on file. Expect tracking info from IT at least 3 business days before your start date.</p>
+      </div>
+    </div>
+    <div class="info-card reveal d3">
+      <div class="ic-icon" style="background:var(--purple-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7b5bc4" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div>
+        <h4>Your onboarding buddy</h4>
+        <p>You'll be paired with a buddy before Day One. They're your go-to for the informal stuff: culture questions, Slack norms, and navigating your first few weeks.</p>
+      </div>
+    </div>
+    <div class="info-card reveal d4">
+      <div class="ic-icon" style="background:var(--citron-soft);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0a2c43" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div>
+        <h4>Questions before Day One?</h4>
+        <p>Email <a href="mailto:onboarding@auditboard.com" style="color:var(--teal);font-weight:500;">onboarding@auditboard.com</a> or <a href="mailto:awoods@optro.ai" style="color:var(--teal);font-weight:500;">awoods@optro.ai</a>, or use the <strong>Enboarder AI Bot</strong> in your Enboarder portal. Once you're in Slack, find us at <strong>#help-pxd</strong>.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FAQ -->
-<section class="section section--dark" id="faq">
-  <div class="container">
-    <p class="section__label">FAQ</p>
-    <div class="adm-wrap">
-      <h2 class="section__heading adm-editable" id="faqHeading"></h2>
-      <button class="adm-pen" style="background:var(--cit)" onclick="openFieldEdit('faqHeading','FAQ Heading','text')">&#9998;</button>
+<!-- DAY ONE / NHO -->
+<section class="nho-sec" id="nho">
+  <span class="eyebrow reveal">New Hire Orientation</span>
+  <h2 class="sec-title reveal">What to expect during<br>your first three days</h2>
+  <p class="sec-sub reveal">NHO spans 3 live virtual mornings. Sessions wrap by midday. Your afternoons are yours for role-based onboarding, async learning, and getting settled in your tools.</p>
+
+  <div class="nho-grid">
+    <div class="n-card reveal">
+      <div class="n-icon" style="background:var(--ice);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0e5371" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <h3>When to log on</h3>
+      <ul class="blist">
+        <li><strong>8:00 AM PST · 9:00 AM MST · 10:00 AM CST · 11:00 AM EST</strong></li>
+        <li>EMEA: sessions begin at <strong>4:00 PM GMT / 5:00 PM CET</strong></li>
+        <li>Sessions run approximately 3 hours each morning. Afternoons are yours.</li>
+        <li>Your calendar invite has the Zoom link and full agenda. Review it before Day One.</li>
+        <li>Zoom link: <a href="https://auditboard.zoom.us/my/aborientation" target="_blank" style="color:var(--teal);font-weight:500;">auditboard.zoom.us/my/aborientation</a></li>
+      </ul>
     </div>
-    <div class="faq-list" id="faqList"></div>
-    <button class="add-faq-btn" onclick="openAddFAQ()">+ Add FAQ Item</button>
+    <div class="n-card reveal d1">
+      <div class="n-icon" style="background:var(--teal-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0e5371" stroke-width="1.8" stroke-linecap="round"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+      <h3>Before you log on</h3>
+      <ul class="blist">
+        <li>Have your laptop powered up and connected to stable internet</li>
+        <li>Find a quiet-ish space. <strong>Camera on</strong> is expected for all live training sessions.</li>
+        <li>Dress code is <strong>casual</strong>. Comfortable and camera-ready is all we ask.</li>
+        <li>Keep your <strong>personal email</strong> open on Day One. Your first 3 NHO invites are sent there. The rest come to your Optro email once your account is active.</li>
+        <li>Headphones with a mic make a real difference</li>
+      </ul>
+    </div>
+    <div class="n-card reveal d2">
+      <div class="n-icon" style="background:var(--purple-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7b5bc4" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3>Who you'll meet</h3>
+      <ul class="blist">
+        <li>Ashlynn Woods, People Experience Team</li>
+        <li>Your direct manager</li>
+        <li>Your department team</li>
+        <li>Your onboarding buddy</li>
+        <li>IT &amp; Systems team</li>
+        <li>Your fellow Optronauts (new hire cohort)</li>
+      </ul>
+    </div>
+    <div class="n-card reveal d3">
+      <div class="n-icon" style="background:var(--citron-soft);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0a2c43" stroke-width="1.8" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.19 12 19.79 19.79 0 0 1 1.15 3.38 2 2 0 0 1 3.12 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96A16 16 0 0 0 16 17.04l.73-.73a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <h3>Need help on Day One?</h3>
+      <ul class="blist">
+        <li>Tech issues? Your IT contact is in your onboarding email</li>
+        <li>Can't join? Email <a href="mailto:onboarding@auditboard.com" style="color:var(--teal);font-weight:500;">onboarding@auditboard.com</a> immediately</li>
+        <li>Laptop trouble? We'll troubleshoot live. No stress.</li>
+        <li>Coming into the office? Let your team know and we'll make sure someone greets you</li>
+      </ul>
+    </div>
+
+    <!-- ZOOM LINK BANNER -->
+    <div class="reveal" style="grid-column:span 2;background:var(--citron);border-radius:12px;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="background:rgba(10,44,67,0.12);border-radius:8px;padding:10px;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0a2c43" stroke-width="1.8" stroke-linecap="round"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14"/><rect x="1" y="6" width="14" height="12" rx="2"/></svg>
+        </div>
+        <div>
+          <p style="font-size:13px;font-weight:500;color:var(--blue);margin-bottom:2px;">Your NHO Zoom link</p>
+          <p style="font-size:12px;color:rgba(10,44,67,0.65);">Use this link for all live NHO sessions. Bookmark it before Day One.</p>
+        </div>
+      </div>
+      <a href="https://auditboard.zoom.us/my/aborientation" target="_blank" style="display:inline-block;background:var(--blue);color:var(--white);font-size:13px;font-weight:500;padding:12px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;letter-spacing:0.02em;">Join Zoom ↗</a>
+    </div>
+
+    <!-- ON-CYCLE SCHEDULE -->
+    <div class="n-card full reveal">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+        <div class="n-icon" style="background:rgba(255,255,255,0.1);margin-bottom:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#e5fe52" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div>
+          <span style="display:inline-block;font-size:10px;font-weight:500;padding:3px 10px;border-radius:100px;background:rgba(229,254,82,0.15);color:var(--citron);letter-spacing:0.08em;margin-bottom:4px;">On-Cycle</span>
+          <h3 style="margin-bottom:0;">Your NHO week schedule (US &amp; CAN)</h3>
+        </div>
+      </div>
+      <div class="sched-cols" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="sched-col">
+          <p class="sched-col-lbl bright">Day 1: Start date</p>
+          <div class="srow"><span class="stime">8:00 AM</span><span class="sev"><strong>Welcome &amp; Program Overview</strong></span></div>
+          <div class="srow"><span class="stime">8:30 AM</span><span class="sev"><strong>IT Security Awareness</strong></span></div>
+          <div class="srow"><span class="stime">9:00 AM</span><span class="sev"><strong>Equipment + Tech Stack Set-Up</strong></span></div>
+          <div class="srow"><span class="stime">10:00 AM</span><span class="sev it">Break</span></div>
+          <div class="srow"><span class="stime">10:30 AM</span><span class="sev"><strong>Technology &amp; Tools</strong></span></div>
+          <div class="srow"><span class="stime">11:30 AM</span><span class="sev"><strong>Wrap Up &amp; Next Steps</strong></span></div>
+          <div class="srow"><span class="stime">11:45 AM</span><span class="sev it">Focus Time: Gallup CliftonStrengths Assessment</span></div>
+        </div>
+        <div class="sched-col">
+          <p class="sched-col-lbl bright">Day 2</p>
+          <div class="srow"><span class="stime">8:00 AM</span><span class="sev"><strong>Stand Up</strong> <span style="font-weight:400;font-style:italic;color:rgba(255,255,255,0.5);">(optional — drop in if you have questions)</span></span></div>
+          <div class="srow"><span class="stime">8:15 AM</span><span class="sev"><strong>AuditBoard's Culture</strong></span></div>
+          <div class="srow"><span class="stime">9:15 AM</span><span class="sev it">Break</span></div>
+          <div class="srow"><span class="stime">10:00 AM</span><span class="sev"><strong>Goals &amp; Performance Expectations</strong></span></div>
+          <div class="srow"><span class="stime">10:45 AM</span><span class="sev"><strong>Wrap Up &amp; Next Steps</strong></span></div>
+        </div>
+        <div class="sched-col">
+          <p class="sched-col-lbl bright">Day 3</p>
+          <div class="srow"><span class="stime">8:00 AM</span><span class="sev"><strong>Stand Up</strong> <span style="font-weight:400;font-style:italic;color:rgba(255,255,255,0.5);">(optional — drop in if you have questions)</span></span></div>
+          <div class="srow"><span class="stime">8:15 AM</span><span class="sev"><strong>Career Development &amp; Strengths</strong></span></div>
+          <div class="srow"><span class="stime">9:15 AM</span><span class="sev it">Break</span></div>
+          <div class="srow"><span class="stime">10:00 AM</span><span class="sev"><strong>AuditBoard and Connected Risk</strong></span></div>
+          <div class="srow"><span class="stime">10:45 AM</span><span class="sev"><strong>Wrap Up &amp; Next Steps</strong></span></div>
+        </div>
+      </div>
+      <p class="sched-foot">All times PST. EMEA Optronauts: sessions begin at 4:00 PM GMT / 5:00 PM CET. Bold sessions are live and virtual. Italicized slots are focus or async time.</p>
+    </div>
+
+    <!-- OFF-CYCLE SCHEDULE -->
+    <div class="n-card full reveal" style="background:var(--teal);border-color:var(--teal);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+        <div class="n-icon" style="background:rgba(255,255,255,0.1);margin-bottom:0;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div>
+          <span style="display:inline-block;font-size:10px;font-weight:500;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);letter-spacing:0.08em;margin-bottom:4px;">Off-Cycle</span>
+          <h3 style="color:var(--white);margin-bottom:0;">Your start week schedule</h3>
+        </div>
+      </div>
+      <div class="sched-cols" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="sched-col">
+          <p class="sched-col-lbl" style="color:rgba(255,255,255,0.5);">Monday — Start date</p>
+          <div class="srow"><span class="stime">8:00 AM</span><span class="sev">Welcome to Optro</span></div>
+          <div class="srow"><span class="stime">9:00 AM</span><span class="sev">IT Setup (facilitated by IT Support)</span></div>
+          <div class="srow" style="border:none;"><span class="stime" style="color:rgba(255,255,255,0.4);font-style:italic;min-width:auto;"></span><span class="sev it" style="margin-top:8px;display:block;">Rest of week planned by your manager</span></div>
+        </div>
+        <div class="sched-col">
+          <p class="sched-col-lbl" style="color:rgba(255,255,255,0.5);">Throughout your start week</p>
+          <div class="srow"><span class="stime" style="color:var(--ice);min-width:auto;padding-right:12px;">May include</span><span class="sev">Role-Based Onboarding</span></div>
+          <div class="srow"><span class="stime" style="color:var(--ice);min-width:auto;padding-right:12px;">May include</span><span class="sev">Async Learning in WorkRamp</span></div>
+        </div>
+        <div class="sched-col">
+          <p class="sched-col-lbl" style="color:rgba(255,255,255,0.5);">The following Monday</p>
+          <div class="srow" style="border:none;padding-bottom:0;margin-bottom:0;"><span class="sev" style="color:rgba(255,255,255,0.8);line-height:1.6;">You'll join the next On-Cycle NHO cohort and run through the full 3-day NHO program with your fellow Optronauts.</span></div>
+          <p style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:14px;font-style:italic;">Ashlynn Woods will send your cohort invite and Slack group link before your start date.</p>
+        </div>
+      </div>
+      <p class="sched-foot" style="color:rgba(255,255,255,0.3);">Your NHO Zoom link is the same regardless of cycle: <a href="https://auditboard.zoom.us/my/aborientation" target="_blank" style="color:var(--ice);">auditboard.zoom.us/my/aborientation</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- WEEK ONE -->
+<section style="background:var(--white);padding:92px 52px;" id="nho-dates">
+  <span class="eyebrow reveal">NHO Schedule</span>
+  <h2 class="sec-title reveal">Upcoming cohort dates</h2>
+  <p class="sec-sub reveal">On-Cycle weeks are full NHO sessions. Off-Cycle weeks are role-based onboarding with your team. You'll link up with the next On-Cycle cohort of Optronauts the following Monday. Your Slack group follows the format <strong>#Op-newhires-mmdd-year</strong>.</p>
+
+  <div class="reveal" style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead>
+        <tr style="border-bottom:2px solid var(--gray-mid);">
+          <th style="text-align:left;padding:10px 16px 12px 0;font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-dark);">Week of</th>
+          <th style="text-align:left;padding:10px 16px 12px;font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-dark);">Type</th>
+          <th style="text-align:left;padding:10px 0 12px 16px;font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-dark);">Notes</th>
+        </tr>
+      </thead>
+      <tbody id="dates-tbody">
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+const nhoData = [
+  {date:"2025-07-21",type:"on"},
+  {date:"2025-07-28",type:"off"},
+  {date:"2025-08-04",type:"on"},
+  {date:"2025-08-11",type:"off"},
+  {date:"2025-08-18",type:"on",note:"Hot Topics"},
+  {date:"2025-08-25",type:"off"},
+  {date:"2025-09-01",type:"on",note:"Labour Day (CA/US) — Tuesday start"},
+  {date:"2025-09-08",type:"off"},
+  {date:"2025-09-15",type:"on"},
+  {date:"2025-09-22",type:"off"},
+  {date:"2025-09-29",type:"on"},
+  {date:"2025-10-06",type:"off"},
+  {date:"2025-10-13",type:"on",note:"Thanksgiving (CA) / Columbus Day (US) — Tuesday start"},
+  {date:"2025-10-20",type:"off"},
+  {date:"2025-10-27",type:"on"},
+  {date:"2025-11-03",type:"on"},
+  {date:"2025-11-10",type:"off",note:"Veterans Day"},
+  {date:"2025-11-17",type:"off",note:"All People Team Off-Site"},
+  {date:"2025-11-24",type:"off",note:"Thanksgiving (US)"},
+  {date:"2025-12-01",type:"on"},
+  {date:"2025-12-08",type:"on",note:"Hot Topics"},
+  {date:"2025-12-15",type:"off"},
+  {date:"2025-12-22",type:"off",note:"Christmas Eve / Christmas Day / Boxing Day"},
+  {date:"2025-12-29",type:"on",note:"New Year's"},
+  {date:"2026-01-05",type:"on"},
+  {date:"2026-01-12",type:"off"},
+  {date:"2026-01-19",type:"on",note:"MLK Jr. Day — Tuesday start"},
+  {date:"2026-01-26",type:"off"},
+  {date:"2026-02-02",type:"on"},
+  {date:"2026-02-09",type:"off"},
+  {date:"2026-02-16",type:"on",note:"President's Day / Family Day — Tuesday start"},
+  {date:"2026-02-23",type:"off"},
+  {date:"2026-03-02",type:"on"},
+  {date:"2026-03-09",type:"off"},
+  {date:"2026-03-16",type:"on"},
+  {date:"2026-03-23",type:"off"},
+  {date:"2026-03-30",type:"on",note:"Good Friday"},
+  {date:"2026-04-06",type:"off",note:"Easter Monday"},
+  {date:"2026-04-13",type:"on"},
+  {date:"2026-04-20",type:"off"},
+  {date:"2026-04-27",type:"on"},
+  {date:"2026-05-04",type:"on",note:"Early May Bank Holiday (EMEA)"},
+  {date:"2026-05-11",type:"off"},
+  {date:"2026-05-18",type:"off",note:"Victoria Day (CA)"},
+  {date:"2026-05-25",type:"on",note:"Memorial Day / Spring Bank Holiday — Tuesday start"},
+  {date:"2026-06-01",type:"off"},
+  {date:"2026-06-08",type:"on"},
+  {date:"2026-06-15",type:"off",note:"Juneteenth"},
+  {date:"2026-06-22",type:"on"},
+  {date:"2026-06-29",type:"off",note:"Canada Day / Fourth of July"},
+  {date:"2026-07-06",type:"on"},
+  {date:"2026-07-13",type:"off"},
+  {date:"2026-07-20",type:"on"},
+  {date:"2026-07-27",type:"off"},
+  {date:"2026-08-03",type:"on"},
+  {date:"2026-08-10",type:"off"},
+  {date:"2026-08-17",type:"on"},
+  {date:"2026-08-24",type:"off"},
+  {date:"2026-08-31",type:"on",note:"Summer Bank Holiday — Tuesday start (EMEA)"},
+  {date:"2026-09-07",type:"off",note:"Labor Day"},
+  {date:"2026-09-14",type:"on"},
+  {date:"2026-09-21",type:"off"},
+  {date:"2026-09-28",type:"on",note:"Truth & Reconciliation Day (CA) — Thursday makeup"},
+  {date:"2026-10-05",type:"off"},
+  {date:"2026-10-12",type:"on",note:"Thanksgiving (CA) — Tuesday start"},
+  {date:"2026-10-19",type:"off"},
+  {date:"2026-10-26",type:"on"},
+  {date:"2026-11-02",type:"on"},
+  {date:"2026-11-09",type:"off",note:"Veterans Day"},
+  {date:"2026-11-16",type:"on"},
+  {date:"2026-11-23",type:"off",note:"Thanksgiving Day"},
+  {date:"2026-11-30",type:"on"},
+  {date:"2026-12-07",type:"on"},
+  {date:"2026-12-14",type:"off"},
+  {date:"2026-12-21",type:"off",note:"Christmas Eve / Christmas Day / Boxing Day"},
+  {date:"2026-12-28",type:"on",note:"New Year's Eve (half day) — No impact"},
+  {date:"2027-01-04",type:"on"},
+];
+
+const tbody = document.getElementById('dates-tbody');
+const today = new Date();
+today.setHours(0,0,0,0);
+
+const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+nhoData.forEach((row, i) => {
+  const d = new Date(row.date + 'T00:00:00');
+  const twoWeeksAgo = new Date(today); twoWeeksAgo.setDate(today.getDate() - 14);
+  if (d < twoWeeksAgo) return;
+
+  const isPast = d < today;
+  const isNext = !isPast && (i === 0 || nhoData.slice(0,i).every(r => new Date(r.date + 'T00:00:00') < today));
+
+  const mon = months[d.getMonth()];
+  const day = d.getDate();
+  const yr = d.getFullYear();
+  const label = `${mon} ${day}, ${yr}`;
+
+  const isOn = row.type === 'on';
+
+  const tr = document.createElement('tr');
+  tr.style.borderBottom = '1px solid var(--gray)';
+  if (isPast) tr.style.opacity = '0.38';
+
+  const badge = isOn
+    ? `<span style="display:inline-block;font-size:10px;font-weight:500;padding:3px 10px;border-radius:100px;background:var(--citron-soft);color:var(--blue);letter-spacing:0.06em;">On-Cycle</span>`
+    : `<span style="display:inline-block;font-size:10px;font-weight:500;padding:3px 10px;border-radius:100px;background:var(--gray);color:var(--gray-dark);letter-spacing:0.06em;">Off-Cycle</span>`;
+
+  const nextDot = isNext ? `<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--citron);margin-left:8px;vertical-align:middle;"></span>` : '';
+
+  tr.innerHTML = `
+    <td style="padding:12px 16px 12px 0;font-weight:${isPast?'400':'500'};color:var(--text);">${label}${nextDot}</td>
+    <td style="padding:12px 16px;">${badge}</td>
+    <td style="padding:12px 0 12px 16px;font-size:13px;color:var(--muted);">${row.note||''}</td>
+  `;
+  tbody.appendChild(tr);
+});
+</script>
+
+<section class="week-sec" id="week-one">
+  <span class="eyebrow reveal">Week One</span>
+  <h2 class="sec-title reveal">What your first week<br>actually looks like</h2>
+  <p class="sec-sub reveal">NHO covers your first 3 mornings. The rest of the week blends role-based onboarding with async learning. Week One is about absorbing, not performing. Every Optronaut starts here.</p>
+
+  <div class="timeline">
+    <div class="tl-item reveal">
+      <div class="tl-lbl">Day 1</div>
+      <div class="tl-spine"><div class="tl-dot hi"></div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>Welcome, Culture &amp; IT Setup</h4>
+        <p>Your first NHO morning covers Welcome &amp; Program Overview, Optro's Culture, IT Security Awareness, Equipment + Tech Stack Setup, Goals &amp; Performance Expectations, and a Technology &amp; Tools walkthrough. Lots of information coming at you. Just absorb what you can.</p>
+        <div class="tags"><span class="tag yel">Live virtual</span><span class="tag yel">Camera on</span></div>
+      </div>
+    </div>
+    <div class="tl-item reveal d1">
+      <div class="tl-lbl">Day 2</div>
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>Career Development, Strengths &amp; Connected Risk</h4>
+        <p>An optional Stand Up is available if you have questions, followed by Career Development &amp; Strengths and a deep dive into Optro &amp; Connected Risk. Your afternoon is focus time. Use it to complete your Gallup CliftonStrengths Assessment and explore WorkRamp at your own pace.</p>
+        <div class="tags"><span class="tag ice">Live virtual</span><span class="tag pur">CliftonStrengths</span></div>
+      </div>
+    </div>
+    <div class="tl-item reveal d2">
+      <div class="tl-lbl">Day 3+</div>
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>Role-Based Onboarding</h4>
+        <p>After NHO wraps, the rest of your week shifts to role-specific onboarding coordinated by your manager. Expect team introductions, function-specific tool deep-dives, and a conversation about your 30-day plan.</p>
+        <div class="tags"><span class="tag ice">Manager-led</span><span class="tag ice">Role-specific</span></div>
+      </div>
+    </div>
+    <div class="tl-item reveal d3">
+      <div class="tl-lbl">Async</div>
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>WorkRamp: Optro Basics</h4>
+        <p>You'll have access to async learning modules covering Optro Basics in WorkRamp. Work through them at your own pace. They're self-directed and always available.</p>
+        <div class="tags"><span class="tag yel">Self-paced</span><span class="tag ice">WorkRamp</span></div>
+      </div>
+    </div>
+    <div class="tl-item reveal d4">
+      <div class="tl-lbl">Off-Cycle</div>
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line" style="visibility:hidden"></div></div>
+      <div class="tl-body">
+        <h4>Joining the next NHO cohort</h4>
+        <p>If you started off-cycle, your first week is primarily role-based onboarding with your team. The following Monday you'll join the next On-Cycle NHO with a fresh crew of Optronauts. Ashlynn Woods will share your cohort invite and Slack group before you start.</p>
+        <div class="tags"><span class="tag ice">Next On-Cycle week</span><span class="tag pur">Slack: #Op-newhires-mmdd-year</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CULTURE -->
+<section class="culture-sec dark-sec" id="culture">
+  <span class="eyebrow reveal">Culture &amp; Values</span>
+  <h2 class="sec-title reveal">How we work.<br>And why it matters.</h2>
+  <p class="sec-sub reveal">Our values aren't a poster on a wall. They shape how we make decisions, communicate across time zones, and show up for each other and our customers every day.</p>
+
+  <div class="val-grid">
+    <div class="v-card reveal">
+      <div class="v-num">01</div>
+      <h3>Customer obsession</h3>
+      <p>It starts and ends here. Consistently ask yourself how what you're doing creates value for our customers. It's not just a priority. It's a mindset that shapes every decision we make.</p>
+    </div>
+    <div class="v-card reveal d1">
+      <div class="v-num">02</div>
+      <h3>Gritty resilience</h3>
+      <p>Make it happen. Find a way. We move fast, stay positive, and do what it takes. When things get hard (and they will), we don't slow down. We find a path through.</p>
+    </div>
+    <div class="v-card reveal d2">
+      <div class="v-num">03</div>
+      <h3>Drive innovation</h3>
+      <p>Learn, be bold, evolve. We create the future. Continuously improve what exists and invent what's next. Comfort with the status quo is not something you'll find here.</p>
+    </div>
+    <div class="v-card reveal d1">
+      <div class="v-num">04</div>
+      <h3>Win, together</h3>
+      <p>One crew. No silos, no egos. We drive to be the best and we support each other's success. A win for a fellow Optronaut is a win for all of us. Full stop.</p>
+    </div>
+    <div class="v-card reveal d2">
+      <div class="v-num">05</div>
+      <h3>Growth mindset</h3>
+      <p>10x, not 10%. We think in orders of magnitude, not increments. Seek feedback, learn, and improve. Ambition here is measured by how much bigger we can go.</p>
+    </div>
+    <div class="v-card comm reveal d3">
+      <div class="v-num" style="color:var(--citron);opacity:1;">+</div>
+      <h3>Community at Optro</h3>
+      <p>We enable belonging through Optronaut-led resource groups that drive connection and inclusion across the company.</p>
+      <div class="erg-row">
+        <span class="erg">WOO</span>
+        <span class="erg">DIBs</span>
+        <span class="erg">Culture Committee</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dist-banner reveal">
+    <div class="dist-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#c9ecee" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+    </div>
+    <div>
+      <h4>Distributed by default, not by accident</h4>
+      <p>Optro is a distributed-first company. Remote isn't a compromise, it's the design. We default to async, document everything, and make sure no one is disadvantaged for not being in a room. If you come into the office, expect it to be quiet. Most of your fellow Optronauts are online.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="ben-sec" id="benefits">
+  <span class="eyebrow reveal">Benefits</span>
+  <h2 class="sec-title reveal">What Optro offers you</h2>
+  <p class="sec-sub reveal">Full details are in your offer letter and will be covered during orientation. Here's the short version so you know what to look forward to.</p>
+
+  <div class="ben-grid">
+    <div class="b-card reveal">
+      <div class="b-icon" style="background:var(--teal-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0e5371" stroke-width="1.8" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <h3>Health &amp; Wellness</h3>
+      <p>Comprehensive medical, dental, and vision plans. Includes access to hormonal and family-building support. Because whole-person health matters here.</p>
+      <a href="https://px.sequoia.com/optro" class="b-note" target="_blank">View your full benefits at px.sequoia.com/optro →</a>
+    </div>
+    <div class="b-card reveal d1">
+      <div class="b-icon" style="background:var(--citron-soft);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0a2c43" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </div>
+      <h3>Flexible Vacation</h3>
+      <p>Exempt employees enjoy flexible paid time off to rest and recharge. We mean it. Take the time, use it well, and come back ready to go 10x.</p>
+      <a href="https://px.sequoia.com/optro" class="b-note" target="_blank">View your full benefits at px.sequoia.com/optro →</a>
+    </div>
+    <div class="b-card reveal d2">
+      <div class="b-icon" style="background:var(--ice);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0e5371" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <h3>Financial Safety Net</h3>
+      <p>Competitive salary, 401(k) matching, and life insurance plans. We want you to feel financially secure so you can focus on doing great work.</p>
+      <a href="https://px.sequoia.com/optro" class="b-note" target="_blank">View your full benefits at px.sequoia.com/optro →</a>
+    </div>
+    <div class="b-card reveal d3">
+      <div class="b-icon" style="background:var(--purple-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7b5bc4" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3>Parental Leave</h3>
+      <p>Paid time off to care for your newborn, adopted, or foster child. Parenting a new family member is one of the most important things you'll ever do. Optro has your back.</p>
+      <a href="https://px.sequoia.com/optro" class="b-note" target="_blank">View your full benefits at px.sequoia.com/optro →</a>
+    </div>
+    <div class="b-card reveal">
+      <div class="b-icon" style="background:var(--ice);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0e5371" stroke-width="1.8" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <h3>Professional Development</h3>
+      <p>Grow through development workshops, mentoring programs, and more. Growth mindset isn't just a value. We invest in it for every Optronaut.</p>
+      <a href="https://px.sequoia.com/optro" class="b-note" target="_blank">View your full benefits at px.sequoia.com/optro →</a>
+    </div>
+    <div class="b-card reveal d1">
+      <div class="b-icon" style="background:var(--purple-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7b5bc4" stroke-width="1.8" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <h3>Headspace Care</h3>
+      <p>Access to Headspace Care for mental wellness, for you and your dependents. Your mental health is a priority, not an afterthought.</p>
+      <a href="https://px.sequoia.com/optro" class="b-note" target="_blank">View your full benefits at px.sequoia.com/optro →</a>
+    </div>
+    <div class="b-card reveal d2">
+      <div class="b-icon" style="background:var(--citron-soft);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0a2c43" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+      </div>
+      <h3>Live Your Best Life</h3>
+      <p>A monthly stipend to encourage you to live your best life, however that looks for you. Gym, hobbies, wellness, adventures. It's yours to use.</p>
+      <a href="https://px.sequoia.com/optro" class="b-note" target="_blank">View your full benefits at px.sequoia.com/optro →</a>
+    </div>
+    <div class="b-card reveal d3">
+      <div class="b-icon" style="background:var(--teal-light);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0e5371" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3>Community Impact</h3>
+      <p>Optro partners with communities and sponsors its own events. Get involved through WOO, DIBs, and the Culture Committee. These are the Optronaut-led connections that make distributed work feel close.</p>
+      <a href="https://px.sequoia.com/optro" class="b-note" target="_blank">View your full benefits at px.sequoia.com/optro →</a>
+    </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer class="footer">
-  <div class="container footer__inner">
-    <div class="footer__logo">Optro People Experience</div>
-    <div class="adm-wrap">
-      <p id="footerLine" style="font-size:.74rem" class="adm-editable"></p>
-      <button class="adm-pen" onclick="openFieldEdit('footerLine','Footer Contact Line','text')">&#9998;</button>
-    </div>
-    <p>Last updated: March 2026</p>
+<footer>
+  <div class="f-logo">opt<span>ro</span></div>
+  <div>
+    <p class="f-text">Questions before Day One?</p>
+    <a href="mailto:onboarding@auditboard.com" class="f-link">onboarding@auditboard.com</a>
   </div>
+  <p class="f-text">103 Foulk Road, Suite 202 · Wilmington, DE &nbsp;·&nbsp; <a href="https://optro.ai" class="f-link" target="_blank">optro.ai</a></p>
 </footer>
 
 <script>
-// ============================================================
-// CONFIG
-// ============================================================
-const ADMIN_PW = "OptroAdmin2026";
-
-// ============================================================
-// DEFAULT CONTENT
-// ============================================================
-const DEF = {
-  heroHeading: "Community, <em>belonging,</em> and shared purpose at Optro",
-  heroBody: "ERGs are employee-led communities that bring people together around shared identities and interests. They are a core part of how we build an Optro culture that values diverse perspectives and actively invests in them.",
-  pfHeadline: "Replace spreadsheets, automate the busywork, <em>track every dollar,</em> and prove ERG impact with real data.",
-  pfSub: "One platform for membership, events, budgets, and reporting.",
-  howHeading: "Built to be employee-led and sustainably supported",
-  howIntro: "Each ERG is driven by its members, with clear leadership, executive sponsorship, and backing from DIBS. All programming is funded through a proposal process rather than fixed budgets.",
-  ergsHeading: "Find your community",
-  ergsIntro: "Browse our current and forming Employee Resource Groups. Click any ERG card to see upcoming events, leadership details, and the events calendar.",
-  govHeading: "How ERGs are supported",
-  govIntro: "The ERG ecosystem at Optro is built on three interlocking roles. Each plays a distinct part in keeping communities healthy, well-resourced, and connected to the broader organization.",
-  formHeading: "How new groups get formed",
-  formIntro: "New ERGs are both employee-driven and sustainably supported. Here is how the formation process works, from interest to launch.",
-  faqHeading: "Common questions about ERGs",
-  footerLine: "Questions? Reach out to your People Business Partner or post in the #people-programs Slack channel.",
-  pillars: [
-    {icon:"🙋",title:"Employee-Led",body:"Members define the mission, plan programming, and shape their community. Leadership comes from within the group, with timezone representation built in from day one."},
-    {icon:"🏛️",title:"DIBS Governed",body:"DIBS serves as the governance body, providing structure, mentorship, and funding oversight. It connects ERG leaders with the People Team."},
-    {icon:"📣",title:"Executive Sponsored",body:"Every ERG has a senior leader who provides visibility, advocates for the community internally, and connects programming to company priorities."},
-    {icon:"🌍",title:"Globally Inclusive",body:"Each group designates timezone leads to ensure programming, events, and communications reach all regions. No employee is consistently excluded due to scheduling."}
-  ],
-  faqItems: [
-    {q:"Who can join an ERG?",a:"All Optro employees are welcome to join any ERG, regardless of whether you personally identify with the community. Many groups explicitly include allies as members."},
-    {q:"How is ERG programming funded?",a:"ERGs do not receive a fixed budget. Instead, ERG leaders submit programming proposals to DIBS for review. Proposals are evaluated based on expected impact and participation."},
-    {q:"What is DIBS and how does it support ERGs?",a:"DIBS is the governance body for ERGs at Optro, led by the People Experience team. It supports ERG leaders through mentorship, manages the centralized programming budget, and facilitates quarterly cross-ERG leadership syncs."},
-    {q:"I am in EMEA or APAC. Will ERG programming be accessible to me?",a:"Yes. Each ERG designates a timezone lead for each active region. These leads coordinate with the primary ERG leadership team to adapt or mirror programming so employees across all timezones can participate."},
-    {q:"What is the difference between DIBS, WOO, and the Culture Committee?",a:"WOO is an employee-led ERG focused on women and allies. DIBS is the governance body that supports all ERGs. The Culture Committee focuses on broader company engagement and CSR initiatives."},
-    {q:"How do I become an ERG leader?",a:"When new ERGs are forming, leadership opportunities are open to any interested employee. For existing ERGs, reach out to the current ERG lead or your People Business Partner."},
-    {q:"How will I know what ERG events are happening?",a:"ERG events are communicated through Slack channels, the internal calendar, and ERG-specific newsletters. Final events also appear on each ERG's detail page on this hub."}
-  ]
-};
-
-const DEF_ERGS = [{
-  id:"woo",name:"WOO",fullName:"Women of Optro",emoji:"⭐",status:"active",
-  mission:"WOO builds community and amplifies the voices of women and allies across Optro through mentorship, programming, and peer connection that supports career growth and belonging.",
-  eltSponsor:"TBD",ergLeads:["TBD"],
-  timezoneLeads:{americas:"TBD",emea:"TBD",apac:"TBD"},
-  joinLink:"",accentColor:"#0e5371"
-}];
-
-// ============================================================
-// STATE
-// ============================================================
-let isAdmin = false;
-let ergData = [], members = {}, requests = [], events = {}, budgets = {}, signups = {};
-let siteContent = {};
-let activeDetailERGId = null;
-let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
-let activeSignupEvtId = null, activeJoinTarget = null;
-let hubERGId = null, hubTab = "events", hubEvtYear = String(new Date().getFullYear()), hubEvtStatus = "all";
-let hubBudgetYear = String(new Date().getFullYear());
-let reqFilter = "all";
-
-// ============================================================
-// STORAGE
-// ============================================================
-function load(){
-  const e=localStorage.getItem("optro_ergs_v5"); ergData=e?JSON.parse(e):JSON.parse(JSON.stringify(DEF_ERGS));
-  const m=localStorage.getItem("optro_mem_v3"); members=m?JSON.parse(m):{};
-  const r=localStorage.getItem("optro_req_v3"); requests=r?JSON.parse(r):[];
-  const ev=localStorage.getItem("optro_events_v2"); events=ev?JSON.parse(ev):{};
-  const b=localStorage.getItem("optro_budgets_v2"); budgets=b?JSON.parse(b):{};
-  const s=localStorage.getItem("optro_signups_v2"); signups=s?JSON.parse(s):{};
-  const c=localStorage.getItem("optro_content_v2"); siteContent=c?JSON.parse(c):JSON.parse(JSON.stringify(DEF));
-}
-const saveErgs=()=>localStorage.setItem("optro_ergs_v5",JSON.stringify(ergData));
-const saveMembers=()=>localStorage.setItem("optro_mem_v3",JSON.stringify(members));
-const saveRequests=()=>localStorage.setItem("optro_req_v3",JSON.stringify(requests));
-const saveEvents=()=>localStorage.setItem("optro_events_v2",JSON.stringify(events));
-const saveBudgets=()=>localStorage.setItem("optro_budgets_v2",JSON.stringify(budgets));
-const saveSignups=()=>localStorage.setItem("optro_signups_v2",JSON.stringify(signups));
-const saveContent=()=>localStorage.setItem("optro_content_v2",JSON.stringify(siteContent));
-
-const getMC=(id)=>(members[id]||[]).length;
-const totalMembers=()=>Object.values(members).reduce((s,a)=>s+a.length,0);
-const getFinalUpcoming=()=>Object.values(events).flat().filter(e=>e.status==="final"&&new Date(e.date)>=new Date());
-
-// ============================================================
-// AUTH
-// ============================================================
-function handleAdminBtn(){isAdmin?logOut():openM("loginModal")}
-function doLogin(){
-  if(document.getElementById("loginPw").value===ADMIN_PW){
-    isAdmin=true; closeM("loginModal"); applyAdminUI();
-  } else {
-    document.getElementById("loginErr").classList.add("on");
-    document.getElementById("loginPw").value="";
-    document.getElementById("loginPw").focus();
-  }
-}
-function logOut(){
-  isAdmin=false;
-  if(document.getElementById("adminDash").classList.contains("open")) closeDash();
-  applyAdminUI();
-}
-function applyAdminUI(){
-  const btn=document.getElementById("navAdminBtn");
-  document.getElementById("adminBanner").classList.toggle("on",isAdmin);
-  document.getElementById("adminBadge").classList.toggle("on",isAdmin);
-  document.getElementById("navDashBtn").classList.toggle("on",isAdmin);
-  btn.textContent=isAdmin?"Exit Admin":"Admin Login";
-  btn.classList.toggle("on",isAdmin);
-  document.getElementById("ergGrid").classList.toggle("edit-mode",isAdmin);
-  document.body.classList.toggle("admin-active",isAdmin);
-  renderCards();
-  renderContent();
-}
-
-// ============================================================
-// MODALS
-// ============================================================
-const openM=(id)=>document.getElementById(id).classList.add("open");
-const closeM=(id)=>document.getElementById(id).classList.remove("open");
-document.querySelectorAll(".mo").forEach(o=>o.addEventListener("click",function(e){if(e.target===this)this.classList.remove("open")}));
-
-// ============================================================
-// CONTENT RENDERING
-// ============================================================
-function renderContent(){
-  const c=siteContent;
-  // HTML fields
-  ["heroHeading","pfHeadline"].forEach(k=>{const el=document.getElementById(k);if(el)el.innerHTML=c[k]||DEF[k]||""});
-  // Text fields
-  ["heroBody","pfSub","howHeading","howIntro","ergsHeading","ergsIntro","govHeading","govIntro","formHeading","formIntro","faqHeading","footerLine"].forEach(k=>{
-    const el=document.getElementById(k);if(el)el.textContent=c[k]||DEF[k]||"";
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  document.querySelectorAll('#navmenu a').forEach(a => {
+    a.addEventListener('click', () => document.getElementById('navmenu').classList.remove('open'));
   });
-  // Pillars
-  const pillars=c.pillars||DEF.pillars;
-  const pc=document.getElementById("pillarsContainer");
-  if(pc) pc.innerHTML=pillars.map((p,i)=>`
-    <div class="pillar">
-      ${isAdmin?`<button class="adm-pen" style="display:flex;top:8px;right:8px" onclick="openPillarEdit(${i})">&#9998;</button>`:""}
-      <div class="pillar__icon">${p.icon}</div>
-      <div class="pillar__title">${p.title}</div>
-      <div class="pillar__body">${p.body}</div>
-    </div>`).join("");
-  renderFAQ();
-}
-
-// ============================================================
-// FIELD EDIT (single field)
-// ============================================================
-function openFieldEdit(key, label, type){
-  const val=(siteContent[key]||DEF[key]||"");
-  const tabs=document.getElementById("ceTabs");
-  const panels=document.getElementById("cePanels");
-  tabs.innerHTML=`<span style="font-family:var(--fm);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)">${label}</span>`;
-  panels.innerHTML=`<div class="ce-panel active">
-    <div class="mf"><label>${label}${type==="html"?" (HTML allowed)":""}</label>
-    <textarea id="ce_val" rows="5" style="font-family:var(--fm);font-size:.84rem">${esc(val)}</textarea></div>
-  </div>`;
-  document.getElementById("ceSubmit").onclick=()=>{
-    siteContent[key]=document.getElementById("ce_val").value;
-    saveContent(); renderContent(); closeM("contentModal");
-  };
-  openM("contentModal");
-}
-
-function openPillarEdit(idx){
-  const p=(siteContent.pillars||DEF.pillars)[idx];
-  document.getElementById("ceTabs").innerHTML=`<span style="font-family:var(--fm);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)">Pillar ${idx+1}</span>`;
-  document.getElementById("cePanels").innerHTML=`<div class="ce-panel active">
-    <div class="mf-row">
-      <div class="mf"><label>Icon</label><input type="text" id="ce_pi" value="${esc(p.icon)}"/></div>
-      <div class="mf"><label>Title</label><input type="text" id="ce_pt" value="${esc(p.title)}"/></div>
-    </div>
-    <div class="mf"><label>Body</label><textarea id="ce_pb" rows="4">${esc(p.body)}</textarea></div>
-  </div>`;
-  document.getElementById("ceSubmit").onclick=()=>{
-    if(!siteContent.pillars) siteContent.pillars=JSON.parse(JSON.stringify(DEF.pillars));
-    siteContent.pillars[idx]={icon:document.getElementById("ce_pi").value,title:document.getElementById("ce_pt").value,body:document.getElementById("ce_pb").value};
-    saveContent(); renderContent(); closeM("contentModal");
-  };
-  openM("contentModal");
-}
-
-// ============================================================
-// CONTENT EDITOR (full)
-// ============================================================
-function openContentEditor(){
-  const c=siteContent;
-  const tabs=document.getElementById("ceTabs");
-  const panels=document.getElementById("cePanels");
-  const tLabels=["Hero","Platform","How It Works","ERGs & Footer","FAQ"];
-  tabs.innerHTML=tLabels.map((t,i)=>`<button class="ce-tab${i===0?" active":""}" onclick="switchCETab(${i},this)">${t}</button>`).join("");
-  panels.innerHTML=`
-    <div class="ce-panel active" id="cep0">
-      <div class="mf"><label>Hero Heading (HTML ok)</label><textarea id="ce_hH" rows="2" style="font-family:var(--fm)">${esc(c.heroHeading||DEF.heroHeading)}</textarea></div>
-      <div class="mf"><label>Hero Body Text</label><textarea id="ce_hB" rows="3">${esc(c.heroBody||DEF.heroBody)}</textarea></div>
-    </div>
-    <div class="ce-panel" id="cep1">
-      <div class="mf"><label>Platform Headline (HTML ok)</label><textarea id="ce_pfH" rows="2" style="font-family:var(--fm)">${esc(c.pfHeadline||DEF.pfHeadline)}</textarea></div>
-      <div class="mf"><label>Platform Subheading</label><textarea id="ce_pfS" rows="2">${esc(c.pfSub||DEF.pfSub)}</textarea></div>
-    </div>
-    <div class="ce-panel" id="cep2">
-      <div class="mf"><label>How It Works Heading</label><input type="text" id="ce_hwH" value="${esc(c.howHeading||DEF.howHeading)}"/></div>
-      <div class="mf"><label>How It Works Intro</label><textarea id="ce_hwI" rows="3">${esc(c.howIntro||DEF.howIntro)}</textarea></div>
-    </div>
-    <div class="ce-panel" id="cep3">
-      <div class="mf"><label>ERGs Section Heading</label><input type="text" id="ce_eH" value="${esc(c.ergsHeading||DEF.ergsHeading)}"/></div>
-      <div class="mf"><label>ERGs Section Intro</label><textarea id="ce_eI" rows="3">${esc(c.ergsIntro||DEF.ergsIntro)}</textarea></div>
-      <div class="mf"><label>Governance Heading</label><input type="text" id="ce_gH" value="${esc(c.govHeading||DEF.govHeading)}"/></div>
-      <div class="mf"><label>Formation Heading</label><input type="text" id="ce_fmH" value="${esc(c.formHeading||DEF.formHeading)}"/></div>
-      <div class="mf"><label>Footer Contact Line</label><input type="text" id="ce_fl" value="${esc(c.footerLine||DEF.footerLine)}"/></div>
-    </div>
-    <div class="ce-panel" id="cep4">
-      <div class="mf"><label>FAQ Heading</label><input type="text" id="ce_fqH" value="${esc(c.faqHeading||DEF.faqHeading)}"/></div>
-      <p style="font-size:.79rem;color:#8fa3b0;font-family:var(--fm);margin-top:8px">Edit individual FAQ items using the Edit buttons that appear in admin mode on the public FAQ section.</p>
-    </div>`;
-  document.getElementById("ceSubmit").onclick=()=>{
-    siteContent.heroHeading=document.getElementById("ce_hH").value;
-    siteContent.heroBody=document.getElementById("ce_hB").value;
-    siteContent.pfHeadline=document.getElementById("ce_pfH").value;
-    siteContent.pfSub=document.getElementById("ce_pfS").value;
-    siteContent.howHeading=document.getElementById("ce_hwH").value;
-    siteContent.howIntro=document.getElementById("ce_hwI").value;
-    siteContent.ergsHeading=document.getElementById("ce_eH").value;
-    siteContent.ergsIntro=document.getElementById("ce_eI").value;
-    siteContent.govHeading=document.getElementById("ce_gH").value;
-    siteContent.formHeading=document.getElementById("ce_fmH").value;
-    siteContent.footerLine=document.getElementById("ce_fl").value;
-    siteContent.faqHeading=document.getElementById("ce_fqH").value;
-    saveContent(); renderContent(); closeM("contentModal");
-  };
-  openM("contentModal");
-}
-function switchCETab(i,btn){
-  document.querySelectorAll(".ce-tab").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll(".ce-panel").forEach(p=>p.classList.remove("active"));
-  btn.classList.add("active");
-  document.getElementById("cep"+i).classList.add("active");
-}
-
-// ============================================================
-// FAQ
-// ============================================================
-function renderFAQ(){
-  const el=document.getElementById("faqList");if(!el)return;
-  const items=(siteContent.faqItems||DEF.faqItems);
-  el.innerHTML=items.map((item,i)=>`
-    <div class="faq-item" id="faq${i}">
-      <button class="faq-q" onclick="toggleFAQ(${i})">${item.q}<span class="fi">+</span></button>
-      <div class="faq-a">${item.a}</div>
-      <div class="faq-admin-bar">
-        <button class="btn btn--sm btn--secondary" onclick="openEditFAQ(${i})">Edit</button>
-        <button class="btn btn--sm btn--danger" onclick="deleteFAQ(${i})">Remove</button>
-      </div>
-    </div>`).join("");
-}
-function toggleFAQ(i){document.getElementById("faq"+i).classList.toggle("open")}
-function openEditFAQ(i){
-  const item=(siteContent.faqItems||DEF.faqItems)[i];
-  document.getElementById("ceTabs").innerHTML=`<span style="font-family:var(--fm);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)">Edit FAQ ${i+1}</span>`;
-  document.getElementById("cePanels").innerHTML=`<div class="ce-panel active">
-    <div class="mf"><label>Question</label><input type="text" id="ce_fq" value="${esc(item.q)}"/></div>
-    <div class="mf"><label>Answer</label><textarea id="ce_fa" rows="4">${esc(item.a)}</textarea></div>
-  </div>`;
-  document.getElementById("ceSubmit").onclick=()=>{
-    if(!siteContent.faqItems) siteContent.faqItems=JSON.parse(JSON.stringify(DEF.faqItems));
-    siteContent.faqItems[i]={q:document.getElementById("ce_fq").value,a:document.getElementById("ce_fa").value};
-    saveContent(); renderContent(); closeM("contentModal");
-  };
-  openM("contentModal");
-}
-function deleteFAQ(i){
-  if(!confirm("Remove this FAQ item?"))return;
-  if(!siteContent.faqItems) siteContent.faqItems=JSON.parse(JSON.stringify(DEF.faqItems));
-  siteContent.faqItems.splice(i,1);
-  saveContent(); renderContent();
-}
-function openAddFAQ(){
-  document.getElementById("ceTabs").innerHTML=`<span style="font-family:var(--fm);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)">New FAQ Item</span>`;
-  document.getElementById("cePanels").innerHTML=`<div class="ce-panel active">
-    <div class="mf"><label>Question</label><input type="text" id="ce_fq" placeholder="Enter question"/></div>
-    <div class="mf"><label>Answer</label><textarea id="ce_fa" rows="4" placeholder="Enter answer"></textarea></div>
-  </div>`;
-  document.getElementById("ceSubmit").onclick=()=>{
-    if(!siteContent.faqItems) siteContent.faqItems=JSON.parse(JSON.stringify(DEF.faqItems));
-    siteContent.faqItems.push({q:document.getElementById("ce_fq").value,a:document.getElementById("ce_fa").value});
-    saveContent(); renderContent(); closeM("contentModal");
-  };
-  openM("contentModal");
-}
-
-// ============================================================
-// ERG CARDS
-// ============================================================
-function sTag(s){
-  const m={active:"Active",forming:"Forming",pilot:"Pilot",created:"Created",reviewing:"Reviewing",approved:"Approved",final:"Final",pending:"Pending",denied:"Denied"};
-  return `<span class="tag tag--${s}">${m[s]||s}</span>`;
-}
-
-function renderCards(){
-  const q=(document.getElementById("ergSearch").value||"").toLowerCase().trim();
-  const data=q?ergData.filter(e=>e.name.toLowerCase().includes(q)||e.fullName.toLowerCase().includes(q)||e.mission.toLowerCase().includes(q)):ergData;
-  const grid=document.getElementById("ergGrid");
-  const nr=document.getElementById("noResults");
-  nr.style.display=(data.length===0&&!isAdmin)?"block":"none";
-  grid.innerHTML="";
-  data.forEach(erg=>{
-    const mc=getMC(erg.id);
-    const leads=(erg.ergLeads||["TBD"]).join(", ");
-    const tz=erg.timezoneLeads||{};
-    const finalEvts=(events[erg.id]||[]).filter(e=>e.status==="final"&&new Date(e.date)>=new Date());
-    const jBtn=erg.joinLink
-      ?`<button class="join-btn" onclick="event.stopPropagation();openJoinModal('${erg.id}')">Join ERG</button>`
-      :`<button class="join-btn join-btn--disabled" disabled onclick="event.stopPropagation()">Forming Soon</button>`;
-    const editBar=isAdmin?`<div class="erg-card__edit-bar">
-      <button class="edit-btn-sm" onclick="event.stopPropagation();openERGModal('${erg.id}')">&#9998; Edit</button>
-      <button class="edit-btn-sm danger" onclick="event.stopPropagation();deleteERG('${erg.id}')">&#128465;</button>
-    </div>`:"";
-    grid.innerHTML+=`<article class="erg-card" onclick="openERGDetail('${erg.id}')">
-      ${editBar}
-      <div class="erg-card__accent" style="background:${erg.accentColor}"></div>
-      <div class="erg-card__body">
-        <div class="erg-card__top">
-          <div style="display:flex;gap:9px;align-items:flex-start;flex:1">
-            <span style="font-size:1.9rem">${erg.emoji}</span>
-            <div><div class="erg-card__name">${erg.name}</div><div class="erg-card__subtitle">${erg.fullName}</div></div>
-          </div>
-          ${sTag(erg.status)}
-        </div>
-        <p class="erg-card__mission">${erg.mission}</p>
-        <div class="erg-card__meta">
-          <div><div class="erg-meta__label">ELT Sponsor</div><div class="erg-meta__value">${erg.eltSponsor||"TBD"}</div></div>
-          <div><div class="erg-meta__label">ERG Lead(s)</div><div class="erg-meta__value">${leads}</div></div>
-          <div style="grid-column:1/-1;border-top:1px dashed #e0e0db;padding-top:10px;margin-top:2px">
-            <div class="erg-meta__label" style="margin-bottom:4px">Timezone Leads</div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:.76rem;font-weight:600">
-              <span><span style="opacity:.5;font-size:.61rem;font-family:var(--fm);margin-right:3px">AMER</span>${tz.americas||"TBD"}</span>
-              <span><span style="opacity:.5;font-size:.61rem;font-family:var(--fm);margin-right:3px">EMEA</span>${tz.emea||"TBD"}</span>
-              <span><span style="opacity:.5;font-size:.61rem;font-family:var(--fm);margin-right:3px">APAC</span>${tz.apac||"TBD"}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="erg-card__footer">
-        <div style="display:flex;gap:10px;align-items:center">
-          <div class="mc-pill">&#128101;<span>${mc} member${mc!==1?"s":""}</span></div>
-          ${finalEvts.length?`<div class="mc-pill">&#128197;<span>${finalEvts.length} event${finalEvts.length!==1?"s":""}</span></div>`:""}
-        </div>
-        ${jBtn}
-      </div>
-    </article>`;
-  });
-  if(isAdmin) grid.innerHTML+=`<div class="add-erg-card" onclick="openERGModal(null)"><div class="add-erg-card__icon">+</div><div class="add-erg-card__label">Add New ERG</div></div>`;
-  document.getElementById("statActive").textContent=ergData.filter(e=>e.status==="active").length;
-  document.getElementById("statForming").textContent=ergData.filter(e=>e.status!=="active").length;
-  document.getElementById("statMembers").textContent=totalMembers();
-  document.getElementById("statEvents").textContent=getFinalUpcoming().length;
-}
-document.getElementById("ergSearch").addEventListener("input",renderCards);
-
-// ============================================================
-// ERG EDIT
-// ============================================================
-function openERGModal(id){
-  const isNew=id===null;
-  document.getElementById("ergEditTitle").textContent=isNew?"Add New ERG":"Edit ERG";
-  if(isNew){
-    document.getElementById("em_id").value="erg_"+Date.now();
-    ["em_name","em_fullName","em_mission","em_sponsor","em_leads","em_amer","em_emea","em_apac","em_link"].forEach(x=>document.getElementById(x).value="");
-    document.getElementById("em_emoji").value="⭐";document.getElementById("em_status").value="forming";document.getElementById("em_color").value="#0e5371";
-    ["em_leads","em_amer","em_emea","em_apac","em_sponsor"].forEach(x=>document.getElementById(x).value="TBD");
-  } else {
-    const e=ergData.find(x=>x.id===id);if(!e)return;
-    document.getElementById("em_id").value=e.id;document.getElementById("em_name").value=e.name;
-    document.getElementById("em_fullName").value=e.fullName;document.getElementById("em_emoji").value=e.emoji;
-    document.getElementById("em_mission").value=e.mission;document.getElementById("em_status").value=e.status;
-    document.getElementById("em_color").value=e.accentColor;document.getElementById("em_sponsor").value=e.eltSponsor||"";
-    document.getElementById("em_leads").value=(e.ergLeads||[]).join(", ");
-    document.getElementById("em_amer").value=(e.timezoneLeads||{}).americas||"";
-    document.getElementById("em_emea").value=(e.timezoneLeads||{}).emea||"";
-    document.getElementById("em_apac").value=(e.timezoneLeads||{}).apac||"";
-    document.getElementById("em_link").value=e.joinLink||"";
-  }
-  openM("ergEditModal");
-}
-function saveERG(){
-  const id=document.getElementById("em_id").value;
-  const idx=ergData.findIndex(e=>e.id===id);
-  const u={id,name:v("em_name"),fullName:v("em_fullName"),emoji:v("em_emoji")||"⭐",status:v("em_status"),accentColor:v("em_color"),mission:v("em_mission"),eltSponsor:v("em_sponsor"),ergLeads:v("em_leads").split(",").map(s=>s.trim()).filter(Boolean),timezoneLeads:{americas:v("em_amer"),emea:v("em_emea"),apac:v("em_apac")},joinLink:v("em_link")};
-  if(idx>=0)ergData[idx]=u;else ergData.push(u);
-  saveErgs();closeM("ergEditModal");renderCards();
-}
-function deleteERG(id){
-  const e=ergData.find(x=>x.id===id);
-  if(!e||!confirm(`Remove "${e.name}"?`))return;
-  ergData=ergData.filter(x=>x.id!==id);saveErgs();renderCards();
-}
-
-// ============================================================
-// ERG DETAIL + CALENDAR
-// ============================================================
-function openERGDetail(ergId){
-  const erg=ergData.find(e=>e.id===ergId);if(!erg)return;
-  activeDetailERGId=ergId;
-  calYear=new Date().getFullYear();calMonth=new Date().getMonth();
-  document.getElementById("erd-header").style.borderBottom=`4px solid ${erg.accentColor}`;
-  document.getElementById("erd-emoji").textContent=erg.emoji;
-  document.getElementById("erd-name").textContent=erg.name;
-  document.getElementById("erd-fullname").textContent=erg.fullName;
-  document.getElementById("erd-mission").textContent=erg.mission;
-  document.getElementById("erd-sponsor").textContent=erg.eltSponsor||"TBD";
-  document.getElementById("erd-leads").textContent=(erg.ergLeads||["TBD"]).join(", ");
-  document.getElementById("erd-members").textContent=getMC(ergId)+" member"+(getMC(ergId)!==1?"s":"");
-  document.getElementById("erd-evt-title").textContent="Upcoming Events";
-  renderCal();renderDetailEvts(null);
-  openM("ergDetailModal");
-}
-function renderCal(){
-  const el=document.getElementById("cal");if(!el)return;
-  const y=calYear,m=calMonth;
-  const fd=new Date(y,m,1).getDay();
-  const dim=new Date(y,m+1,0).getDate();
-  const now=new Date();
-  const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const evtsByDay={};
-  (events[activeDetailERGId]||[]).filter(e=>e.status==="final").forEach(e=>{
-    const d=new Date(e.date);
-    if(d.getFullYear()===y&&d.getMonth()===m){const day=d.getDate();if(!evtsByDay[day])evtsByDay[day]=[];evtsByDay[day].push(e);}
-  });
-  let html=`<div class="cal-nav"><button class="cal-nav-btn" onclick="calNav(-1)">&#8249;</button><span class="cal-month-label">${MONTHS[m]} ${y}</span><button class="cal-nav-btn" onclick="calNav(1)">&#8250;</button></div>`;
-  html+=`<div class="cal-grid">`;
-  ["Su","Mo","Tu","We","Th","Fr","Sa"].forEach(d=>html+=`<div class="cal-dow">${d}</div>`);
-  for(let i=0;i<fd;i++)html+=`<div class="cal-day empty"></div>`;
-  for(let d=1;d<=dim;d++){
-    const isToday=y===now.getFullYear()&&m===now.getMonth()&&d===now.getDate();
-    const evts=evtsByDay[d]||[];
-    const dots=evts.map(()=>`<div class="cal-dot"></div>`).join("");
-    html+=`<div class="cal-day${evts.length?" has-event":""}${isToday?" today":""}" onclick="onCalDay(${d})"><span>${d}</span>${dots?`<div class="cal-dots">${dots}</div>`:""}</div>`;
-  }
-  html+=`</div>`;
-  el.innerHTML=html;
-}
-function calNav(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCal();}
-function onCalDay(day){
-  const dayEvts=(events[activeDetailERGId]||[]).filter(e=>{
-    const d=new Date(e.date);return e.status==="final"&&d.getFullYear()===calYear&&d.getMonth()===calMonth&&d.getDate()===day;
-  });
-  document.getElementById("erd-evt-title").textContent=dayEvts.length?`Events on ${calMonth+1}/${day}/${calYear}`:"Upcoming Events";
-  renderDetailEvts(dayEvts.length?dayEvts:null);
-}
-function renderDetailEvts(override){
-  const el=document.getElementById("erd-evt-list");if(!el)return;
-  const now=new Date();
-  const evts=override||(events[activeDetailERGId]||[]).filter(e=>e.status==="final"&&new Date(e.date)>=now).sort((a,b)=>new Date(a.date)-new Date(b.date));
-  if(!evts.length){el.innerHTML=`<div class="no-events">No upcoming events scheduled yet.</div>`;return;}
-  const MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  el.innerHTML=evts.map(evt=>{
-    const d=new Date(evt.date);
-    const alreadySigned=(signups[evt.id]||[]).some(s=>s._local);
-    const timeStr=evt.time?(evt.endTime?`${fmt12(evt.time)} \u2013 ${fmt12(evt.endTime)}`:fmt12(evt.time)):"";
-    const sigBtn=alreadySigned
-      ?`<span class="evt-signed-up">&#10003; Signed Up</span>`
-      :`<button class="evt-signup-btn" onclick="openEvtSignup('${evt.id}','${esc(evt.title)}')">Sign Up</button>`;
-    const sc=(signups[evt.id]||[]).length;
-    return`<div class="event-card">
-      <div class="event-card__date">${MN[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}${timeStr?" \u2014 "+timeStr:""}</div>
-      <div class="event-card__title">${evt.title}</div>
-      <div class="event-card__meta">
-        ${evt.location?`<span>&#128205; ${evt.location}</span>`:""}
-        ${evt.poc?`<span>&#128100; ${evt.poc}${evt.pocEmail?` \u2014 <a href="mailto:${evt.pocEmail}" style="color:var(--teal)">${evt.pocEmail}</a>`:""}</span>`:""}
-        ${sc?`<span style="color:var(--teal);font-family:var(--fm);font-size:.68rem">${sc} signed up</span>`:""}
-      </div>
-      <div class="event-card__actions">
-        ${evt.link?`<a href="${evt.link}" target="_blank" class="event-card__link">&#128279; Event Link</a>`:""}
-        ${sigBtn}
-      </div>
-      ${evt.description?`<p style="font-size:.79rem;color:#7a8f9c;margin-top:8px;line-height:1.6">${evt.description}</p>`:""}
-    </div>`;
-  }).join("");
-}
-function openJoinFromDetail(){closeM("ergDetailModal");if(activeDetailERGId)openJoinModal(activeDetailERGId);}
-
-function fmt12(t){if(!t)return"";const[h,mi]=t.split(":");const hr=parseInt(h);return`${hr%12||12}:${mi}${hr<12?"am":"pm"}`;}
-
-// ============================================================
-// JOIN
-// ============================================================
-function openJoinModal(ergId){
-  const erg=ergData.find(e=>e.id===ergId);if(!erg)return;
-  activeJoinTarget=erg;
-  document.getElementById("joinERGName").textContent=erg.name;
-  document.getElementById("joinERGFull").textContent=erg.fullName;
-  document.getElementById("joinSlackNote").textContent=erg.joinLink?"After joining, you'll be taken to the "+erg.name+" Slack channel.":"Your name will be added to the member roster and the ERG lead will follow up.";
-  document.getElementById("joinSubmitBtn").textContent=erg.joinLink?"Join ERG + Open Slack":"Join ERG";
-  ["j_name","j_email"].forEach(x=>document.getElementById(x).value="");
-  document.getElementById("j_tz").value="";
-  openM("joinModal");
-}
-function submitJoin(){
-  const n=document.getElementById("j_name"),e=document.getElementById("j_email"),tz=document.getElementById("j_tz");
-  let ok=true;
-  [n,e,tz].forEach(el=>{if(!el.value.trim()){el.style.borderColor="#e05555";ok=false;}else el.style.borderColor=""});
-  if(!ok)return;
-  const eid=activeJoinTarget.id;
-  if((members[eid]||[]).find(m=>m.email.toLowerCase()===e.value.trim().toLowerCase())){alert("You've already joined "+activeJoinTarget.name+"!");return;}
-  if(!members[eid])members[eid]=[];
-  members[eid].push({name:n.value.trim(),email:e.value.trim(),tz:tz.value,joinedAt:new Date().toISOString()});
-  saveMembers();renderCards();
-  const link=activeJoinTarget.joinLink;closeM("joinModal");
-  if(link)setTimeout(()=>window.open(link,"_blank"),200);
-}
-
-// ============================================================
-// EVENT SIGNUP
-// ============================================================
-function openEvtSignup(evtId,evtName){
-  activeSignupEvtId=evtId;
-  document.getElementById("evtSignupName").textContent=evtName;
-  document.getElementById("es_name").value="";document.getElementById("es_email").value="";
-  openM("evtSignupModal");
-}
-function submitEvtSignup(){
-  const n=document.getElementById("es_name"),e=document.getElementById("es_email");
-  let ok=true;
-  [n,e].forEach(el=>{if(!el.value.trim()){el.style.borderColor="#e05555";ok=false;}else el.style.borderColor=""});
-  if(!ok)return;
-  if(!signups[activeSignupEvtId])signups[activeSignupEvtId]=[];
-  if(signups[activeSignupEvtId].find(s=>s.email.toLowerCase()===e.value.trim().toLowerCase())){alert("Already signed up!");closeM("evtSignupModal");return;}
-  signups[activeSignupEvtId].push({name:n.value.trim(),email:e.value.trim(),signedUpAt:new Date().toISOString(),_local:true});
-  saveSignups();closeM("evtSignupModal");renderDetailEvts(null);
-}
-
-// ============================================================
-// ADMIN DASHBOARD
-// ============================================================
-function openDash(){if(!isAdmin)return;document.getElementById("adminDash").classList.add("open");renderDash();}
-function closeDash(){document.getElementById("adminDash").classList.remove("open");}
-function switchDashTab(panel,btn){
-  document.querySelectorAll(".dash-panel").forEach(p=>p.classList.remove("active"));
-  document.querySelectorAll(".dash-tab").forEach(b=>b.classList.remove("active"));
-  document.getElementById("dash"+panel).classList.add("active");
-  btn.classList.add("active");
-  renderDash();
-}
-function renderDash(){renderReqList();renderMemberList();renderHub();}
-
-// REQUESTS
-function filterReqs(f,btn){
-  reqFilter=f;
-  document.querySelectorAll(".req-filter-btn").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  renderReqList();
-}
-function renderReqList(){
-  const el=document.getElementById("reqList");
-  const list=reqFilter==="all"?requests:requests.filter(r=>r.status===reqFilter);
-  if(!list.length){el.innerHTML=`<div class="req-empty">No ${reqFilter==="all"?"submissions":reqFilter+" requests"} yet.</div>`;return;}
-  el.innerHTML=[...list].reverse().map(req=>{
-    const d=new Date(req.submittedAt).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-    const denialSection=req.status==="denied"
-      ?(req.denialReason
-        ?`<div class="denial-saved"><strong>Denial Reason</strong>${req.denialReason}</div>`
-        :`<div class="denial-box"><label>Reason for Denial</label><textarea id="dt_${req.id}" placeholder="Provide a brief explanation..."></textarea><button class="save-denial" onclick="saveDenial('${req.id}')">Save Denial</button></div>`)
-      :"";
-    return`<div class="req-card">
-      <div class="req-card__top"><div><div class="req-card__name">${req.name}</div><div class="req-card__meta">${req.email} | ${req.tz} | ${d}</div><div class="req-card__erg">${req.ergname}</div></div>${sTag(req.status)}</div>
-      <div class="req-card__body"><strong>Community / Focus</strong>${req.type}</div>
-      <div class="req-card__body"><strong>Why this ERG matters</strong>${req.why}</div>
-      ${req.lead?`<div class="req-card__body"><strong>Leadership interest</strong>${req.lead}</div>`:""}
-      ${req.notes?`<div class="req-card__body"><strong>Additional notes</strong>${req.notes}</div>`:""}
-      <div class="req-card__actions">
-        <button class="req-action-btn reviewing" onclick="setReqStatus('${req.id}','reviewing')">&#128336; Reviewing</button>
-        <button class="req-action-btn approved" onclick="setReqStatus('${req.id}','approved')">&#10003; Approve</button>
-        <button class="req-action-btn denied" onclick="setReqStatus('${req.id}','denied')">&#10007; Deny</button>
-      </div>${denialSection}
-    </div>`;
-  }).join("");
-}
-function setReqStatus(id,status){
-  const req=requests.find(r=>r.id===id);if(!req)return;
-  req.status=status;if(status!=="denied")req.denialReason="";
-  saveRequests();renderReqList();
-}
-function saveDenial(id){
-  const req=requests.find(r=>r.id===id);if(!req)return;
-  const ta=document.getElementById("dt_"+id);
-  req.denialReason=ta?ta.value:"";
-  saveRequests();renderReqList();
-}
-
-// MEMBERS
-function renderMemberList(){
-  const el=document.getElementById("memberList");if(!el)return;
-  if(!ergData.length){el.innerHTML=`<div class="req-empty">No ERGs configured yet.</div>`;return;}
-  el.innerHTML=ergData.map(erg=>{
-    const list=members[erg.id]||[];
-    return`<div class="member-erg-section">
-      <div class="member-erg-header">
-        <div style="display:flex;align-items:center;gap:9px"><span style="font-size:1.3rem">${erg.emoji}</span><span class="member-erg-name">${erg.name} \u2014 ${erg.fullName}</span></div>
-        <span class="member-erg-count">${list.length} member${list.length!==1?"s":""}</span>
-      </div>
-      ${list.length?`<table class="mtable"><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Timezone</th><th>Joined</th></tr></thead><tbody>${list.map((m,i)=>`<tr><td style="color:#8fa3b0;font-family:var(--fm);font-size:.7rem">${i+1}</td><td style="font-weight:600">${m.name}</td><td>${m.email}</td><td><span style="font-family:var(--fm);font-size:.7rem;background:#f0f0ec;padding:2px 7px;border-radius:999px">${m.tz}</span></td><td style="font-family:var(--fm);font-size:.7rem;color:#8fa3b0">${new Date(m.joinedAt).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}</td></tr>`).join("")}</tbody></table>`:`<div class="member-empty">No members yet.</div>`}
-    </div>`;
-  }).join("");
-}
-
-// ERG HUB
-function renderHub(){
-  const el=document.getElementById("hubLayout");if(!el)return;
-  if(!ergData.length){el.innerHTML=`<div class="hub-empty" style="grid-column:1/-1">No ERGs configured yet. Add one from the main site in admin mode.</div>`;return;}
-  if(!hubERGId||!ergData.find(e=>e.id===hubERGId))hubERGId=ergData[0].id;
-  const sidebar=ergData.map(e=>`<button class="hub-erg-btn${e.id===hubERGId?" active":""}" onclick="selectHubERG('${e.id}')">${e.emoji} ${e.name}</button>`).join("");
-  el.innerHTML=`
-    <div class="hub-sidebar">
-      <div class="hub-sidebar-title">Select ERG</div>
-      ${sidebar}
-    </div>
-    <div>
-      <div class="hub-tabs">
-        <button class="hub-tab${hubTab==="events"?" active":""}" onclick="switchHubTab('events',this)">&#128197; Events</button>
-        <button class="hub-tab${hubTab==="budget"?" active":""}" onclick="switchHubTab('budget',this)">&#128200; Budget</button>
-      </div>
-      <div class="hub-panel${hubTab==="events"?" active":""}" id="hubEvtPanel"></div>
-      <div class="hub-panel${hubTab==="budget"?" active":""}" id="hubBudPanel"></div>
-    </div>`;
-  if(hubTab==="events")renderHubEvts();else renderHubBudget();
-}
-function selectHubERG(id){hubERGId=id;renderHub();}
-function switchHubTab(tab,btn){hubTab=tab;renderHub();}
-
-// HUB EVENTS
-function renderHubEvts(){
-  const el=document.getElementById("hubEvtPanel");if(!el)return;
-  const evtList=events[hubERGId]||[];
-  const allYears=[...new Set([...evtList.map(e=>e.year||e.date.split("-")[0]),String(new Date().getFullYear())])].sort();
-  if(!allYears.includes(hubEvtYear))hubEvtYear=allYears[allYears.length-1];
-  const statuses=["all","created","reviewing","approved","final"];
-  const filtered=evtList.filter(e=>{
-    const yr=(e.year||e.date.split("-")[0])===hubEvtYear;
-    const st=hubEvtStatus==="all"||e.status===hubEvtStatus;
-    return yr&&st;
-  }).sort((a,b)=>new Date(a.date)-new Date(b.date));
-  const MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  el.innerHTML=`<div class="hub-events-toolbar">
-    <select class="hub-year-sel" onchange="hubEvtYear=this.value;renderHubEvts()">
-      ${allYears.map(y=>`<option value="${y}"${y===hubEvtYear?" selected":""}>${y}</option>`).join("")}
-    </select>
-    <div class="hub-status-tabs">${statuses.map(s=>`<button class="hub-status-tab${hubEvtStatus===s?" active":""}" onclick="hubEvtStatus='${s}';renderHubEvts()">${s==="all"?"All":s.charAt(0).toUpperCase()+s.slice(1)}</button>`).join("")}</div>
-    <button class="btn btn--primary btn--sm" onclick="openEvtEdit(null)">+ Add Event</button>
-  </div>
-  ${filtered.length?filtered.map(evt=>{
-    const d=new Date(evt.date);
-    const sc=(signups[evt.id]||[]).length;
-    const nextStatus={created:"reviewing",reviewing:"approved",approved:"final"}[evt.status];
-    const advLabel={created:"Submit for Review",reviewing:"Mark Approved",approved:"Mark Final"}[evt.status]||"";
-    const advClass={created:"adv--reviewing",reviewing:"adv--approved",approved:"adv--final"}[evt.status]||"";
-    return`<div class="admin-evt-card">
-      <div class="admin-evt-card__date-box"><div class="month">${MN[d.getMonth()]}</div><div class="day">${d.getDate()}</div></div>
-      <div class="admin-evt-card__body">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px">
-          <div class="admin-evt-card__title">${evt.title}</div>${sTag(evt.status)}
-        </div>
-        <div class="admin-evt-card__meta">
-          ${evt.time?fmt12(evt.time)+" ":""} ${evt.location||""} ${evt.poc?" | POC: "+evt.poc:""} ${evt.estimatedBudget?" | Est: $"+evt.estimatedBudget:""} ${sc?" | "+sc+" signup"+(sc!==1?"s":""):""}
-        </div>
-        ${sc?`<div style="margin-bottom:8px"><details><summary style="font-family:var(--fm);font-size:.68rem;cursor:pointer;color:var(--teal)">${sc} signup${sc!==1?"s":""} \u2014 expand to view</summary><div style="margin-top:6px;font-size:.77rem;color:#4a6070">${(signups[evt.id]||[]).map(s=>`<div style="padding:3px 0;border-bottom:1px solid #f0f0ec">${s.name} \u2014 ${s.email}</div>`).join("")}</div></details></div>`:""}
-        <div class="admin-evt-card__actions">
-          ${nextStatus?`<button class="advance-btn ${advClass}" onclick="advanceEvt('${evt.id}','${nextStatus}')">${advLabel}</button>`:
-            `<span style="font-family:var(--fm);font-size:.68rem;color:var(--green);font-weight:700">&#10003; Final \u2014 Publicly Visible</span>`}
-          <button class="btn btn--sm btn--secondary" onclick="openEvtEdit('${evt.id}')">Edit</button>
-          <button class="btn btn--sm btn--danger" onclick="deleteEvt('${evt.id}')">Delete</button>
-        </div>
-      </div>
-    </div>`;
-  }).join(""):`<div class="hub-empty">No events for ${hubEvtYear}${hubEvtStatus!=="all"?" with status "+hubEvtStatus:""}. <button class="btn btn--sm btn--primary" style="margin-top:10px" onclick="openEvtEdit(null)">+ Add Event</button></div>`}`;
-}
-function advanceEvt(evtId,newStatus){
-  const list=events[hubERGId];if(!list)return;
-  const evt=list.find(e=>e.id===evtId);if(!evt)return;
-  evt.status=newStatus;saveEvents();renderHubEvts();renderCards();
-}
-function openEvtEdit(id){
-  const isNew=id===null;
-  document.getElementById("evtEditTitle").textContent=isNew?"Add Event":"Edit Event";
-  document.getElementById("evtEditSub").textContent=isNew?"New events start in Created status. Advance to Final to make them public.":"";
-  document.getElementById("ev_ergId").value=hubERGId;
-  if(isNew){
-    document.getElementById("ev_id").value="evt_"+Date.now();
-    ["ev_title","ev_desc","ev_time","ev_endtime","ev_budget","ev_location","ev_link","ev_poc","ev_pocEmail"].forEach(x=>document.getElementById(x).value="");
-    document.getElementById("ev_date").value=new Date().toISOString().split("T")[0];
-  } else {
-    const evt=(events[hubERGId]||[]).find(e=>e.id===id);if(!evt)return;
-    document.getElementById("ev_id").value=evt.id;document.getElementById("ev_title").value=evt.title;
-    document.getElementById("ev_desc").value=evt.description||"";document.getElementById("ev_date").value=evt.date;
-    document.getElementById("ev_time").value=evt.time||"";document.getElementById("ev_endtime").value=evt.endTime||"";
-    document.getElementById("ev_budget").value=evt.estimatedBudget||"";document.getElementById("ev_location").value=evt.location||"";
-    document.getElementById("ev_link").value=evt.link||"";document.getElementById("ev_poc").value=evt.poc||"";
-    document.getElementById("ev_pocEmail").value=evt.pocEmail||"";
-  }
-  openM("eventEditModal");
-}
-function saveEvent(){
-  const ergId=v("ev_ergId"),id=v("ev_id"),title=v("ev_title").trim();
-  if(!title)return;
-  if(!events[ergId])events[ergId]=[];
-  const idx=events[ergId].findIndex(e=>e.id===id);
-  const d=v("ev_date");
-  const u={id,ergId,title,description:v("ev_desc"),date:d,time:v("ev_time"),endTime:v("ev_endtime"),estimatedBudget:parseFloat(v("ev_budget"))||0,location:v("ev_location"),link:v("ev_link"),poc:v("ev_poc"),pocEmail:v("ev_pocEmail"),status:idx>=0?events[ergId][idx].status:"created",year:d.split("-")[0]};
-  if(idx>=0)events[ergId][idx]=u;else events[ergId].push(u);
-  saveEvents();closeM("eventEditModal");renderHubEvts();renderCards();
-}
-function deleteEvt(evtId){
-  if(!confirm("Delete this event?"))return;
-  events[hubERGId]=(events[hubERGId]||[]).filter(e=>e.id!==evtId);
-  delete signups[evtId];saveEvents();saveSignups();renderHubEvts();renderCards();
-}
-
-// HUB BUDGET
-function renderHubBudget(){
-  const el=document.getElementById("hubBudPanel");if(!el)return;
-  if(!budgets[hubERGId])budgets[hubERGId]={};
-  const eBudgets=budgets[hubERGId];
-  const curY=String(new Date().getFullYear());
-  if(!eBudgets[hubBudgetYear])eBudgets[hubBudgetYear]={allocated:0,archived:false,expenses:[]};
-  const allYears=[...new Set([...Object.keys(eBudgets),curY])].sort();
-  const activeYrs=allYears.filter(y=>!eBudgets[y]?.archived);
-  const archYrs=allYears.filter(y=>eBudgets[y]?.archived);
-  const yData=eBudgets[hubBudgetYear]||{allocated:0,archived:false,expenses:[]};
-  const spent=yData.expenses.reduce((s,e)=>s+parseFloat(e.amount||0),0);
-  const alloc=parseFloat(yData.allocated)||0;
-  const rem=alloc-spent;
-  const pct=alloc>0?Math.min(100,Math.round(spent/alloc*100)):0;
-  const barColor=pct>90?"linear-gradient(90deg,var(--red),#e74c3c)":"linear-gradient(90deg,var(--teal),var(--cit))";
-  el.innerHTML=`
-    <div class="budget-year-tabs">
-      ${activeYrs.map(y=>`<button class="byt${y===hubBudgetYear?" active":""}" onclick="hubBudgetYear='${y}';renderHubBudget()">${y}</button>`).join("")}
-      <button class="byt" style="border-style:dashed" onclick="addBudgetYear()">+ Year</button>
-      ${archYrs.length?`<span style="font-family:var(--fm);font-size:.68rem;color:#8fa3b0;align-self:center">Archived: ${archYrs.join(", ")}</span>`:""}
-    </div>
-    ${yData.archived?`<div class="archived-notice">&#128274; ${hubBudgetYear} is archived and read-only.</div>`:`
-    <div class="budget-overview">
-      <div class="budget-3col">
-        <div class="bstat" style="text-align:center"><div class="bstat__amount">$${fmtD(alloc)}</div><div class="bstat__label">Allocated</div></div>
-        <div class="bstat" style="text-align:center"><div class="bstat__amount spent">$${fmtD(spent)}</div><div class="bstat__label">Spent</div></div>
-        <div class="bstat" style="text-align:center"><div class="bstat__amount ${rem>=0?"remaining-ok":"remaining-neg"}">$${fmtD(Math.abs(rem))}${rem<0?" over":""}</div><div class="bstat__label">Remaining</div></div>
-      </div>
-      <div class="budget-bar-track"><div class="budget-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
-      <div class="budget-bar-label"><span>${pct}% spent</span><span>$${fmtD(alloc)} total budget</span></div>
-      <div class="budget-alloc-row">
-        <span style="font-size:.8rem;font-weight:700">Set Budget:</span>
-        <input class="budget-alloc-input" type="number" value="${alloc}" min="0" step="100" onchange="updateAlloc(this.value)"/>
-        ${hubBudgetYear!==curY?`<button class="btn btn--sm btn--secondary" onclick="archiveYear('${hubBudgetYear}')">Archive ${hubBudgetYear}</button>`:""}
-      </div>
-    </div>
-    <div>
-      <div class="expense-tbl-hdr">
-        <div class="expense-tbl-title">Expenses (${hubBudgetYear})</div>
-        <button class="btn btn--sm btn--primary" onclick="openExpenseModal()">+ Add Expense</button>
-      </div>
-      ${yData.expenses.length?`
-      <table class="exp-table">
-        <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th></th></tr></thead>
-        <tbody>${yData.expenses.map((exp,i)=>`<tr>
-          <td style="font-family:var(--fm);font-size:.72rem;color:#8fa3b0">${exp.date||""}</td>
-          <td>${exp.description}</td>
-          <td><span style="font-family:var(--fm);font-size:.68rem;background:#f0f0ec;padding:2px 7px;border-radius:999px">${exp.category||"Other"}</span></td>
-          <td style="font-weight:700;color:var(--red)">$${fmtD(parseFloat(exp.amount||0))}</td>
-          <td><button class="exp-del" onclick="deleteExpense(${i})" title="Remove">&#128465;</button></td>
-        </tr>`).join("")}</tbody>
-        <tfoot><tr style="background:#f8f8f5"><td colspan="3" style="text-align:right;font-weight:700;font-size:.82rem;padding:9px 12px;color:#5a7080">Total</td><td style="font-weight:800;color:var(--red);padding:9px 12px">$${fmtD(spent)}</td><td></td></tr></tfoot>
-      </table>`:`<div class="member-empty">No expenses logged for ${hubBudgetYear}.</div>`}
-    </div>`}`;
-}
-function updateAlloc(val){
-  if(!budgets[hubERGId])budgets[hubERGId]={};
-  if(!budgets[hubERGId][hubBudgetYear])budgets[hubERGId][hubBudgetYear]={allocated:0,archived:false,expenses:[]};
-  budgets[hubERGId][hubBudgetYear].allocated=parseFloat(val)||0;
-  saveBudgets();
-}
-function archiveYear(yr){
-  if(!confirm(`Archive ${yr}? It will become read-only.`))return;
-  budgets[hubERGId][yr].archived=true;
-  hubBudgetYear=String(new Date().getFullYear());
-  saveBudgets();renderHubBudget();
-}
-function addBudgetYear(){
-  const yr=prompt("Enter the year to add (e.g. 2027):");
-  if(!yr||isNaN(yr))return;
-  if(!budgets[hubERGId])budgets[hubERGId]={};
-  if(!budgets[hubERGId][yr])budgets[hubERGId][yr]={allocated:0,archived:false,expenses:[]};
-  hubBudgetYear=yr;saveBudgets();renderHubBudget();
-}
-function openExpenseModal(){
-  document.getElementById("exp_ergId").value=hubERGId;
-  document.getElementById("exp_year").value=hubBudgetYear;
-  const erg=ergData.find(e=>e.id===hubERGId);
-  document.getElementById("expSub").textContent=`${erg?.name||""} \u2014 ${hubBudgetYear}`;
-  ["exp_desc","exp_amount","exp_notes"].forEach(x=>document.getElementById(x).value="");
-  document.getElementById("exp_date").value=new Date().toISOString().split("T")[0];
-  openM("expenseModal");
-}
-function saveExpense(){
-  const desc=v("exp_desc").trim(),amount=parseFloat(v("exp_amount"))||0;
-  if(!desc||!amount){alert("Description and amount are required.");return;}
-  const ergId=v("exp_ergId"),yr=v("exp_year");
-  if(!budgets[ergId])budgets[ergId]={};
-  if(!budgets[ergId][yr])budgets[ergId][yr]={allocated:0,archived:false,expenses:[]};
-  budgets[ergId][yr].expenses.push({id:"exp_"+Date.now(),description:desc,amount,category:v("exp_cat"),date:v("exp_date"),notes:v("exp_notes")});
-  saveBudgets();closeM("expenseModal");renderHubBudget();
-}
-function deleteExpense(idx){
-  if(!confirm("Remove this expense?"))return;
-  budgets[hubERGId][hubBudgetYear].expenses.splice(idx,1);
-  saveBudgets();renderHubBudget();
-}
-
-// ============================================================
-// ERG REQUEST FORM
-// ============================================================
-function submitERGRequest(){
-  const required=["f_name","f_email","f_tz","f_ergname","f_type","f_why"];
-  let ok=true;
-  required.forEach(id=>{const el=document.getElementById(id);if(!el.value.trim()){el.style.borderColor="#e05555";ok=false;}else el.style.borderColor=""});
-  if(!ok)return;
-  requests.push({id:"req_"+Date.now(),name:v("f_name"),email:v("f_email"),tz:v("f_tz"),ergname:v("f_ergname"),type:v("f_type"),why:v("f_why"),lead:v("f_lead"),notes:v("f_notes"),status:"pending",denialReason:"",submittedAt:new Date().toISOString()});
-  saveRequests();
-  document.getElementById("ergReqForm").style.display="none";
-  document.getElementById("reqFormSuccess").style.display="block";
-}
-
-// ============================================================
-// UTILS
-// ============================================================
-const v=(id)=>(document.getElementById(id)||{}).value||"";
-const esc=(s)=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-const fmtD=(n)=>Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-
-// ============================================================
-// INIT
-// ============================================================
-load();
-renderContent();
-renderCards();
 </script>
 </body>
 </html>
